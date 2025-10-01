@@ -57,36 +57,36 @@ Un petit projet “preuve de compétence” pour consolider JavaScript puis Type
 Plan d’implémentation (semaine du 06 → 10)
 
 Jour 1 — MVP en JS
-  • [] Maquette HTML simple (form + liste).
-  • [] ui.js : capture du formulaire, rendu de la liste (createElement).
-  • [] storage.js : wrapper LocalStorage (load(), save()).
-  • [] main.js : logique (add, remove, toggle, filter).
-  • [] Tests manuels : rechargement conserve les tâches, filtres OK.
+  • Maquette HTML simple (form + liste).
+  • ui.js : capture du formulaire, rendu de la liste (createElement).
+  • storage.js : wrapper LocalStorage (load(), save()).
+  • main.js : logique (add, remove, toggle, filter).
+  • Tests manuels : rechargement conserve les tâches, filtres OK.
 
 Jour 2 — Durcir & nettoyer
-  • [] Validation (titre requis, longueurs).
-  • [] Accessibilité (labels, aria-live pour messages).
-  • [] Messages d’erreur UX.
-  • [] Refactor : passer en modules ES6 + séparation claire UI/logic/storage.
-  • [] Linter + Prettier.
+  • Validation (titre requis, longueurs).
+  • Accessibilité (labels, aria-live pour messages).
+  • Messages d’erreur UX.
+  • Refactor : passer en modules ES6 + séparation claire UI/logic/storage.
+  • Linter + Prettier.
 
 Jour 3 — Migration TypeScript
-  • [] Créer src/ts/ + tsconfig.json avec strict:true.
-  • [] Définir Task, TaskStatus.
-  • [] Refactor JS → TS (services & UI).
-  • [] Compiler vers dist/, vérifier le fonctionnement.
+  • Créer src/ts/ + tsconfig.json avec strict:true.
+  • Définir Task, TaskStatus.
+  • Refactor JS → TS (services & UI).
+  • Compiler vers dist/, vérifier le fonctionnement.
 
 Jour 4 — Améliorations
-  • [] Filtres avancés (recherche par titre).
-  • [] Tri (par date, statut).
-  • [] Export/Import JSON.
-  • [] Tests unitaires légers (si temps) : fonctions pures (TaskService).
+  • Filtres avancés (recherche par titre).
+  • Tri (par date, statut).
+  • Export/Import JSON.
+  • Tests unitaires légers (si temps) : fonctions pures (TaskService).
 
 Jour 5 — Bonus API + livraison
-  • [] Mini API Express (CRUD mémoire ou lowdb).
-  • [] Adapter le front pour consommer l’API (fetch).
-  • [] README final + CHANGELOG (v1 JS → v2 TS → v3 API).
-  • [] Tag Git v1.0.0.
+  • Mini API Express (CRUD mémoire ou lowdb).
+  • Adapter le front pour consommer l’API (fetch).
+  • README final + CHANGELOG (v1 JS → v2 TS → v3 API).
+  • Tag Git v1.0.0.
 
 ✅ Critères de validation
   • Fonctionnel : toutes les actions de base marchent + persistance locale.

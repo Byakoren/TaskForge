@@ -1,0 +1,50 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+yarn.lock
+.pnpm-debug.log
+
+# TypeScript
+dist/
+out/
+*.tsbuildinfo
+
+# React / Vite / CRA
+build/
+.cache/
+coverage/
+
+# IDE / éditeurs
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Tests
+coverage/
+*.lcov
+
+# Logs
+logs
+*.log
+*.log.*
+
+# Docker
+.docker/
+docker-compose.override.yml
+
+# Env vars
+.env
+.env.local
+.env.*.local

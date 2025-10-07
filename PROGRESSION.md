@@ -1,11 +1,11 @@
-# 📈 Progression TaskForge
+# 📈 Progression TaskForge (S1 → S11)
 
 Ce document retrace l’évolution du projet **semaine par semaine** avec une checklist d’objectifs.  
-Chaque tâche est cochée `[x]` une fois réalisée.
+Chaque tâche est cochée `[x]` une fois terminée.
 
 ---
 
-## ✅ Semaine 1-2 — JS / TS (CRUD LocalStorage)
+## 🧩 Semaine 1-2 — JS / TS (CRUD LocalStorage)
 - [ ] Créer une maquette HTML simple (form + liste)
 - [ ] Implémenter `ui.js` : capture du formulaire, rendu liste (createElement)
 - [ ] Créer `storage.js` : wrapper LocalStorage (load(), save())
@@ -14,42 +14,74 @@ Chaque tâche est cochée `[x]` une fois réalisée.
 
 ---
 
-## 🔄 Semaine 3 — API Node / Express
-- [ ] Créer une API Express avec endpoints CRUD (`/tasks`)
-- [ ] Connecter le front TS à l’API (remplacer LocalStorage par requêtes)
-- [ ] Gérer les erreurs avec un middleware dédié
-- [ ] Tester avec Postman / Thunder Client
+## 🚀 Semaine 3 — API REST (Node / Express)
+- [ ] Initialiser le backend Express (`server.js` / `app.js`)
+- [ ] Créer les routes `/tasks` (GET, POST, PUT, DELETE)
+- [ ] Gérer les erreurs avec des middlewares (`errorHandler`)
+- [ ] Tester l’API avec Postman / Thunder Client
+- [ ] Documenter les endpoints
 
 ---
 
-## 🐳 Semaine 4 — Docker
-- [ ] Créer un `Dockerfile` pour l’API Express
-- [ ] Documenter les commandes build/run
+## ⚛️ Semaine 4 — React (bases)
+- [ ] Créer une app React (Vite ou Create React App)
+- [ ] Implémenter les composants de base : `TaskList`, `TaskForm`
+- [ ] Gérer le state avec `useState` et `useEffect`
+- [ ] Connecter le front à l’API Express
+- [ ] Styliser avec TailwindCSS
+
+---
+
+## 🧠 Semaine 5 — React (avancé)
+- [ ] Mettre en place Context API (state global)
+- [ ] Ajouter le routing (`react-router-dom`)
+- [ ] Améliorer la navigation et l’UX
+- [ ] Optimiser la structure du projet
+
+---
+
+## 🌐 Semaine 6 — Next.js (bases)
+- [ ] Créer un projet Next.js 15
+- [ ] Reproduire le front React en pages Next.js
+- [ ] Comprendre SSR vs SSG
+- [ ] Commencer la migration front
+
+---
+
+## 🔐 Semaine 7 — Next.js (avancé)
+- [ ] Implémenter API routes Next.js
+- [ ] Ajouter authentification légère (JWT)
+- [ ] Protéger les routes côté serveur
+- [ ] Finaliser la migration front complète
+
+---
+
+## 🎨 Semaine 8 — UI/UX avancée
+- [ ] Ajouter Drag & Drop (React DnD)
+- [ ] Filtres et recherche de tâches
+- [ ] Thème clair/sombre (Tailwind)
+- [ ] Améliorer la responsivité et transitions
+
+---
+
+## 🐳 Semaine 9 — Docker (bases)
+- [ ] Créer le `Dockerfile` (backend)
 - [ ] Ajouter `.dockerignore`
+- [ ] Builder et exécuter le conteneur
+- [ ] Tester les endpoints en local
 
 ---
 
-## 🐘 Semaine 5 — PostgreSQL + Docker Compose
-- [ ] Créer un `docker-compose.yml` avec `api + db`
-- [ ] Configurer la connexion Node ↔ Postgres (pg / Prisma / Sequelize)
-- [ ] Créer une table `tasks` avec champs (id, title, description, status, created_at)
-- [ ] Vérifier les CRUD sur Postgres
+## 🗃️ Semaine 10 — PostgreSQL + Docker Compose
+- [ ] Créer `docker-compose.yml`
+- [ ] Lier PostgreSQL à Express (`pg` ou `Sequelize`)
+- [ ] Créer la table `tasks`
+- [ ] Vérifier le CRUD complet avec persistance
 
 ---
 
-## ☸️ Semaine 6 — Kubernetes (bases)
-- [ ] Écrire un `deployment.yaml` pour l’API
-- [ ] Ajouter un `service.yaml` pour exposer l’API
-- [ ] Tester via Minikube (`kubectl port-forward`)
-
----
-
-## ⚛️ Semaine 7 — Front React + TypeScript
-- [ ] Créer une app React TS (`create-react-app` ou Vite)
-- [ ] Afficher les tâches depuis l’API (`fetch` ou `axios`)
-- [ ] Ajouter formulaire pour créer / supprimer / toggle une tâche
-- [ ] Utiliser Context ou Redux pour gérer le state global
-
----
-
-📌 Ce fichier sera mis à jour chaque semaine avec les tâches accomplies ✅
+## ☸️ Semaine 11 — Kubernetes (bases)
+- [ ] Installer Minikube
+- [ ] Créer `deployment.yaml` et `service.yaml`
+- [ ] Déployer l’API et le front dans le cluster
+- [ ] Vérifier les pods et services actifs

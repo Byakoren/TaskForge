@@ -1,10 +1,11 @@
 {
   "name": "taskforge",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "TaskForge est un **mini gestionnaire de tâches évolutif**, développé comme projet fil rouge pour explorer différentes technologies **JavaScript/TypeScript**, **Node.js**, **Docker/Kubernetes** et **React**.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "http-server . -c-1"
   },
   "repository": {
     "type": "git",
@@ -17,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/Byakoren/TaskForge/issues"
   },
-  "homepage": "https://github.com/Byakoren/TaskForge#readme"
+  "homepage": "https://github.com/Byakoren/TaskForge#readme",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
 }

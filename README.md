@@ -76,7 +76,7 @@ taskforge/
 - **Backend** : Node.js (Express)  
 - **Base de données** : PostgreSQL (via Docker Compose)  
 - **Infrastructure** : Docker, Kubernetes (Minikube)  
-- **Qualité & DX** : ESLint, Prettier, Husky (pré‑commit), GitHub Actions (CI plus tard)
+- **Qualité & DX** : ESLint, GitHub Actions (CI plus tard)
 
 ---
 

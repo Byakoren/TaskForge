@@ -104,7 +104,7 @@ taskforge/
 | Outil                         | Usage                 |
 |-------------------------------|--------               |
 | **VS Code**                   | Éditeur principal     |
-| **ESLint**         | Qualité de code       |
+| **ESLint**                    | Qualité de code       |
 | **Thunder Client / Postman**  | Tests API Express     |
 | **http-server**               | Serveur local (S1–S2) |
 | **Docker Desktop / Minikube** | Stack DevOps (S9–S11) |

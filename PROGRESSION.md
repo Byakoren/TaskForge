@@ -12,9 +12,9 @@
 - [x] Créer la structure du projet (`src/`, `public/`)
 - [x] Créer une maquette HTML simple (form + liste)
 - [x] Implémenter `storage.js` (LocalStorage)
-- [ ] Implémenter `ui.js` (rendu DOM, interactions)
-- [ ] Implémenter `main.js` (logique CRUD + refresh)
-- [ ] Vérifier la persistance après refresh
+- [x] Implémenter `ui.js` (rendu DOM, interactions)
+- [x] Implémenter `main.js` (logique CRUD + refresh)
+- [x] Vérifier la persistance après refresh
 - [x] Ajouter script `npm run dev` (http-server)
 
 ### Tests
@@ -27,6 +27,8 @@
 - ✅ `docs/INSTALL_DEV.md`
 - ✅ `docs/conventions.md`
 - ✅ `docs/glossary.md`
+- ✅ `docs/ui.md`
+- ✅ `docs/main.md`
 - 📄 `CHANGELOG.md` → compléter section `v0.1.0` 
 
 ---

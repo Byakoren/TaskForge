@@ -1,11 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>TaskForge — MVP</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap">
+    <link rel="stylesheet" href="./style.css" />
 </head>
+
 <body>
-    <script type="module" src="../src/storage.js"></script>
+  <!-- Formulaire d'ajout des tâches -->
+    <section class="container">
+        <div class="card card-form">
+        <h1>TaskForge</h1>
+
+        <form id="task-form" class="form-inline">
+            <input id="task-input" type="text" placeholder="Nouvelle tâche..." required />
+            <button type="submit">Ajouter</button>
+        </form>
+        </div>
+    </section>
+
+    <!-- Tableau des tâches -->
+    <section class="container container--board">
+        <div class="card card-board">
+        <div class="board" id="board">
+            <div class="lane">
+            <h2 class="lane-title">À faire</h2>
+            <ul id="list-todo" class="task-list"></ul>
+            </div>
+
+            <div class="lane">
+            <h2 class="lane-title">En cours</h2>
+            <ul id="list-doing" class="task-list"></ul>
+            </div>
+
+            <div class="lane">
+            <h2 class="lane-title">Terminé</h2>
+            <ul id="list-done" class="task-list"></ul>
+            </div>
+        </div>
+        </div>
+    </section>
+
+    <script type="module" src="../src/main.js"></script>
 </body>
 </html>

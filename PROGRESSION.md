@@ -18,8 +18,8 @@
 - [x] Ajouter script `npm run dev` (http-server)
 
 ### Tests
-- [ ] Parcours manuel complet : add → toggle → delete → refresh
-- [ ] Vérifier absence d’erreurs console
+- [x] Parcours manuel complet : add → toggle → delete → refresh
+- [x] Vérifier absence d’erreurs console
 
 ### Docs
 - ✅ `docs/architecture/ARCHITECTURE_S1-S2.md`
@@ -29,7 +29,11 @@
 - ✅ `docs/glossary.md`
 - ✅ `docs/ui.md`
 - ✅ `docs/main.md`
-- 📄 `CHANGELOG.md` → compléter section `v0.1.0` 
+- ✅ `CHANGELOG.md` → section `v0.1.0` 
+
+### 🖼️ Aperçu final
+![TaskForge – MVP LocalStorage](./docs/assets/mvp-localstorage.png)
+
 
 ---
 

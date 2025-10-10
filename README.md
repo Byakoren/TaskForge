@@ -106,6 +106,14 @@ npm run lint      # vérifie le code avec ESLint
 npm test          # lance les tests unitaires (futur)
 
 ```
+---
+
+## 🖼️ Aperçu du MVP (Semaine 1–2)
+
+Exemple d’interface TaskForge après la mise en place du CRUD LocalStorage :
+
+![TaskForge – MVP LocalStorage](./docs/assets/mvp-localstorage.png)
+
 
 ---
 

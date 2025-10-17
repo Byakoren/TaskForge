@@ -38,23 +38,31 @@
 ---
 
 ## 🚀 Semaine 3 — API REST (Node / Express)
-> 🎯 Objectif : mettre en place un backend minimal avec Express, exposant des routes CRUD `/api/tasks`.
+> 🎯 Objectif atteint : mise en place d’un backend Express minimaliste exposant les routes CRUD `/api/tasks`.
 
 ### Dev
-- [ ] Initialiser backend Express (`app.js`)
-- [ ] Créer routes CRUD `/api/tasks` (GET, POST, PUT, DELETE)
-- [ ] Ajouter middlewares (`json()`, `cors`, `errorHandler`)
-- [ ] Adapter `storage.js` → appels `fetch()` (asynchrone)
+- [x] Initialisation du backend Express (`app.js`)
+- [x] Ajout des middlewares globaux : `cors`, `morgan`, `express.json()`
+- [x] Création du routeur `/api/tasks` (`tasks.routes.js`) avec CRUD complet :
+  - `GET /api/tasks` — liste toutes les tâches
+  - `POST /api/tasks` — ajoute une tâche
+  - `PUT /api/tasks/:id` — modifie une tâche
+  - `DELETE /api/tasks/:id` — supprime une tâche
+- [x] Gestion des erreurs centralisée (`error.js`)
+- [x] Endpoint de santé `GET /api/health`
 
 ### Tests
-- [ ] Thunder Client / Postman (collection CRUD)
-- [ ] (Optionnel) Supertest : GET + POST automatisés
+- [x] Tests manuels via **Postman** (CRUD complet validé)
+- [x] Vérification des statuts HTTP, payloads et gestion des erreurs
 
 ### Docs
-- 📄 `docs/architecture/ARCHITECTURE_S3.md`
-- 📄 `docs/modules/api.md` → créer
-- 📄 `README.md` → mention “API Express”
-- 📄 `CHANGELOG.md` → ajouter `v0.2.0`
+- ✅ `docs/backend/app.md` — initialisation Express
+- ✅ `docs/backend/error.md` — gestion des erreurs
+- ✅ `docs/backend/tasks.routes.md` — endpoints CRUD
+- ✅ `docs/backend/architecture_S3.md` — schéma d’API et flux de données
+- ✅ `README.md` — ajout mention “API Express”
+- ✅ `CHANGELOG.md` — ajout version `v0.2.0`
+
 
 ---
 

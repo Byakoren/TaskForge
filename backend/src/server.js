@@ -15,13 +15,16 @@
  * - app.js : instance Express préconfigurée
  */
 
-
-require('dotenv').config();
-const app = require('./app');
+const app = require("./app");
+const { loadDb } = require("./utils/store");
 
 const PORT = process.env.PORT || 3001;
 
-app.listen(PORT, () => {
-  console.log(`[TaskForge API] running on http://localhost:${PORT}`);
-});
+async function start() {
+  await loadDb(); // charge le JSON en mémoire avant d’écouter
+  app.listen(PORT, () => {
+    console.log(`[TaskForge API] running on http://localhost:${PORT}`);
+  });
+}
 
+start();

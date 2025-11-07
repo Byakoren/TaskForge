@@ -2,215 +2,142 @@
  * Module : tasks.routes.js
  * Rôle   : définit les routes REST `/api/tasks` (CRUD complet sur les tâches).
  *
- * 📘 Documentation :
- * https://github.com/Byakoren/TaskForge/blob/main/docs/backend/tasks.routes.md
- *
- * Ce module utilise le routeur Express pour exposer les endpoints :
- * - `GET /api/tasks`    → liste toutes les tâches
- * - `POST /api/tasks`   → crée une nouvelle tâche
- * - `PUT /api/tasks/:id` → met à jour une tâche existante
- * - `DELETE /api/tasks/:id` → supprime une tâche
- *
- * Intégré dans :
- * - `app.js` → via `app.use('/api/tasks', tasksRouter)`
- *
- * Fonctions internes :
- * - `readTasks()`  → lit et parse le fichier JSON
- * - `writeTasks()` → sauvegarde les modifications
- * - `nextId()`     → calcule le prochain ID disponible
- * - `parseId()`    → valide le paramètre `id`
- *
- * Persistance :
- * Les données sont stockées localement dans `src/data/tasks.json`
- * (avant migration vers PostgreSQL en Semaine 10).
+ * On garde les mêmes endpoints et le même format de réponse { data: ... }.
+ * On remplace seulement la persistance fichier par le store (getDb/setDb).
  */
 
-
-const { Router } = require('express');
-const fs = require('fs/promises');
-const path = require('path');
-
+const { Router } = require("express");
+const { getDb, setDb } = require("../utils/store"); // <-- remplace fs/path
 const router = Router();
 
-// Chemin vers le store JSON
-const DATA_PATH = path.join(__dirname, '..', 'data', 'tasks.json');
-
-/**
- * HELPERS
- *
- * readTasks()  - lit et parse le fichier JSON des tâches, vérifie le format.
- * writeTasks() - écrit le tableau de tâches dans le fichier JSON.
- * nextId()     - calcule le prochain id numérique disponible.
- * parseId()    - parse et valide le paramètre "id" de la route.
- */
-
-/** Lire les tâches depuis le fichier JSON */
-async function readTasks() {
-  const raw = await fs.readFile(DATA_PATH, 'utf-8');
-  const data = JSON.parse(raw);
-  if (!Array.isArray(data)) {
-    const e = new Error('Data format invalid');
-    e.status = 500;
-    throw e;
-  }
-  return data;
-}
-
-/** Écrire les tâches dans le fichier JSON */
-async function writeTasks(tasks) {
-  await fs.writeFile(DATA_PATH, JSON.stringify(tasks, null, 2), 'utf-8');
-}
-
-/** Calculer le prochain id disponible (entier positif) */
+/** Calculer le prochain id disponible (entier positif, comme avant) */
 function nextId(tasks) {
-  if (!tasks.length) return 1;
+  if (!Array.isArray(tasks) || tasks.length === 0) return 1;
   return Math.max(...tasks.map(t => Number(t.id) || 0)) + 1;
-}
-
-/** Parser et valider le paramètre id (doit être un entier positif) */
-function parseId(param) {
-  const id = Number(param);
-  if (!Number.isInteger(id) || id <= 0) {
-    const e = new Error('Invalid "id" param (must be a positive integer)');
-    e.status = 400;
-    throw e;
-  }
-  return id;
 }
 
 /**
  * GET /api/tasks
- * Retourne la liste complète des tâches
+ * Retourne la liste complète des tâches (même shape qu'avant)
+ * Réponse : { data: Task[] }
  */
-router.get('/', async (_req, res, next) => {
-  try {
-    const tasks = await readTasks();
-    res.status(200).json({ data: tasks });
-  } catch (err) {
-    if (err.code === 'ENOENT') {
-      err.status = 500;
-      err.message = 'Tasks store not found (src/data/tasks.json).';
-    }
-    next(err);
-  }
+router.get("/", (_req, res) => {
+  const db = getDb();
+  res.status(200).json({ data: db.tasks || [] });
 });
 
 /**
  * POST /api/tasks
  * Body attendu: { "title": "Texte de la tâche" }
- * Crée une tâche: { id, title, done:false, createdAt }
+ * Réponse : { data: Task } (et Location sur la ressource créée)
  */
-router.post('/', async (req, res, next) => {
-  try {
-    const { title } = req.body || {};
-
-    // Validation simple
-    if (typeof title !== 'string' || title.trim().length === 0) {
-      const e = new Error('Invalid "title": non-empty string required');
-      e.status = 400;
-      throw e;
-    }
-
-    const tasks = await readTasks();
-
-    const task = {
-      id: nextId(tasks),
-      title: title.trim(),
-      done: false,
-      createdAt: new Date().toISOString(),
-    };
-
-    const updated = [...tasks, task];
-    await writeTasks(updated);
-
-    // 201 Created + Location (bonne pratique REST)
-    res
-      .status(201)
-      .location(`/api/tasks/${task.id}`)
-      .json({ data: task });
-  } catch (err) {
-    // fichier manquant → message clair (comme pour GET)
-    if (err.code === 'ENOENT') {
-      err.status = 500;
-      err.message = 'Tasks store not found (src/data/tasks.json).';
-    }
-    next(err);
+router.post("/", (req, res) => {
+  const { title } = req.body ?? {};
+  if (typeof title !== "string" || title.trim().length === 0) {
+    return res.status(400).json({ error: 'Invalid "title": non-empty string required' });
   }
+
+  const db = getDb();
+  const tasks = Array.isArray(db.tasks) ? db.tasks : (db.tasks = []);
+
+  const task = {
+    id: nextId(tasks),
+    title: title.trim(),
+    done: false,
+    createdAt: new Date().toISOString(),
+  };
+
+  tasks.push(task);
+  setDb(db); // écriture asynchrone via la file d’écriture
+
+  return res.status(201).location(`/api/tasks/${task.id}`).json({ data: task });
 });
 
 /**
  * PUT /api/tasks/:id
  * Body accepté: { "title"?: string, "done"?: boolean }
- * Modifie partiellement la tâche ciblée.
+ * Réponse : { data: Task }
  */
-router.put('/:id', async (req, res, next) => {
-  try {
-    const id = parseId(req.params.id);
-    const { title, done } = req.body ?? {};
-
-    const hasTitle = typeof title === 'string';
-    const hasDone = typeof done === 'boolean';
-    if (!hasTitle && !hasDone) {
-      const e = new Error('Provide at least one valid field: "title" (string) or "done" (boolean)');
-      e.status = 400;
-      throw e;
-    }
-
-    const tasks = await readTasks();
-    const idx = tasks.findIndex(t => Number(t.id) === id);
-    if (idx === -1) {
-      const e = new Error(`Task ${id} not found`);
-      e.status = 404;
-      throw e;
-    }
-
-    const current = tasks[idx];
-    const updated = {
-      ...current,
-      ...(hasTitle ? { title: title.trim() } : {}),
-      ...(hasDone ? { done } : {}),
-      updatedAt: new Date().toISOString(),
-    };
-
-    tasks[idx] = updated;
-    await writeTasks(tasks);
-
-    res.status(200).json({ data: updated });
-  } catch (err) {
-    if (err.code === 'ENOENT') {
-      err.status = 500;
-      err.message = 'Tasks store not found (src/data/tasks.json).';
-    }
-    next(err);
+router.put("/:id", (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id) || id <= 0) {
+    return res.status(400).json({ error: 'Invalid "id" param (must be a positive integer)' });
   }
+
+  const { title, done } = req.body ?? {};
+  const hasTitle = typeof title === "string";
+  const hasDone = typeof done === "boolean";
+  if (!hasTitle && !hasDone) {
+    return res.status(400).json({
+      error: 'Provide at least one valid field: "title" (string) or "done" (boolean)',
+    });
+  }
+
+  const db = getDb();
+  const tasks = Array.isArray(db.tasks) ? db.tasks : (db.tasks = []);
+  const idx = tasks.findIndex(t => Number(t.id) === id);
+  if (idx === -1) {
+    return res.status(404).json({ error: `Task ${id} not found` });
+    }
+
+  const current = tasks[idx];
+  const updated = {
+    ...current,
+    ...(hasTitle ? { title: title.trim() } : {}),
+    ...(hasDone ? { done } : {}),
+    updatedAt: new Date().toISOString(),
+  };
+
+  tasks[idx] = updated;
+  setDb(db);
+
+  return res.status(200).json({ data: updated });
 });
 
 /**
  * DELETE /api/tasks/:id
- * Supprime la tâche (204 No Content si OK).
+ * Réponse : 204 No Content
  */
-router.delete('/:id', async (req, res, next) => {
-  try {
-    const id = parseId(req.params.id);
-    const tasks = await readTasks();
-    const before = tasks.length;
-    const remaining = tasks.filter(t => Number(t.id) !== id);
-
-    if (remaining.length === before) {
-      const e = new Error(`Task ${id} not found`);
-      e.status = 404;
-      throw e;
-    }
-
-    await writeTasks(remaining);
-    res.status(204).send(); // No Content
-  } catch (err) {
-    if (err.code === 'ENOENT') {
-      err.status = 500;
-      err.message = 'Tasks store not found (src/data/tasks.json).';
-    }
-    next(err);
+router.delete("/:id", (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id) || id <= 0) {
+    return res.status(400).json({ error: 'Invalid "id" param (must be a positive integer)' });
   }
+
+  const db = getDb();
+  const tasks = Array.isArray(db.tasks) ? db.tasks : (db.tasks = []);
+  const before = tasks.length;
+  db.tasks = tasks.filter(t => Number(t.id) !== id);
+
+  if (db.tasks.length === before) {
+    return res.status(404).json({ error: `Task ${id} not found` });
+  }
+
+  setDb(db);
+  return res.status(204).send();
+});
+
+/**
+ * BONUS non-cassant :
+ * PATCH /api/tasks/:id/toggle → permet au front d'appeler /toggle si besoin.
+ * Réponse : { data: Task }
+ */
+router.patch("/:id/toggle", (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id) || id <= 0) {
+    return res.status(400).json({ error: 'Invalid "id" param (must be a positive integer)' });
+  }
+
+  const db = getDb();
+  const tasks = Array.isArray(db.tasks) ? db.tasks : (db.tasks = []);
+  const t = tasks.find(x => Number(x.id) === id);
+  if (!t) return res.status(404).json({ error: "Task not found" });
+
+  t.done = !t.done;
+  t.updatedAt = new Date().toISOString();
+  setDb(db);
+
+  return res.status(200).json({ data: t });
 });
 
 module.exports = router;

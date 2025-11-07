@@ -67,45 +67,53 @@
 ---
 
 ## ⚛️ Semaine 4 — React (bases)
-> 🎯 Objectif : mise en place du front React (Vite), composants de base et gestion du state.
+> 🎯 **Objectif atteint** : mise en place du front React avec Vite + TypeScript, composants fonctionnels de base et premier state local.
 
 ### Dev
-- [ ] Initialiser projet React (Vite)
-- [ ] Créer composants : `TaskForm`, `TaskList`, `TaskItem`
-- [ ] Gérer le state avec `useState`
-- [ ] Intégrer l’API Express (`fetch`)
-- [ ] Structurer le dossier `src/components/`
+- [x] Initialisation du projet React (Vite + TypeScript)
+- [x] Création des composants : `TaskForm`, `TaskList`, `TaskItem`
+- [x] Mise en place du style global (`src/styles/global.css`)
+- [x] Gestion du state local avec `useState` et `useEffect`
+- [x] Définition des types (`types.ts`)
+- [x] Structure claire du dossier `src/components/`
+- [x] Préparation du Context API pour la suite (structure et typage)
+- [x] Lancement front via `npm run dev`
 
 ### Tests
-- [ ] Test de rendu React Testing Library (affichage liste)
-- [ ] Test manuel ajout/suppression de tâches
+- [x] Test manuel d’affichage : ajout / suppression / cochage de tâche
+- [x] Vérification du rendu sans erreur console
+- [x] Validation du flux de données entre les composants (props descendantes)
 
 ### Docs
-- 📄 `docs/architecture/ARCHITECTURE_S4.md`
-- 📄 `docs/conventions.md` → ajouter règles React (composants, hooks)
-- 📄 `README.md` → mise à jour “Phase React”
-- 📄 `CHANGELOG.md` → `v0.3.0`
+- ✅ `docs/architecture/ARCHITECTURE_S4.md` — schéma structure front React
+- ✅ `README.md` — ajout section “Phase React (Vite + TypeScript)”
 
 ---
 
-## ⚛️ Semaine 5 — React (avancé)
-> 🎯 Objectif : approfondir React (router, context, effets) et finaliser l’intégration avec l’API.
+## ⚛️ Semaine 5 — React (avancé + intégration API)
+> 🎯 **Objectif atteint** : intégration complète du front React avec le backend Express, gestion du state global via Context API, routing, effets, et persistance.
 
 ### Dev
-- [ ] Ajouter `react-router-dom` (navigation)
-- [ ] Intégrer `Context API` pour le state global
-- [ ] Gérer les effets (`useEffect`) pour sync API ↔ UI
-- [ ] Optimiser les composants (memoization)
+- [x] Mise en place du `TasksContext` (state global, CRUD complet)
+- [x] Création du module API `lib/api.ts` (GET / POST / PATCH / DELETE)
+- [x] Synchronisation complète React ↔ API Express
+- [x] Création du `utils/store.js` côté back (persistance asynchrone)
+- [x] Correction format JSON (`{ data: … }`) et typage `ID = string | number`
+- [x] Intégration `react-router-dom` : vues `/`, `/todo`, `/done`
+- [x] Ajout du composant `TasksCounter` (compteur dynamique)
+- [x] Optimisation (memoization légère, gestion d’erreurs)
+- [x] Prévention redémarrages Nodemon (`nodemon.json`)
 
 ### Tests
-- [ ] Tests de navigation (React Router)
-- [ ] Test du Context Provider (valeurs globales)
+- [x] Tests manuels complets depuis l’UI : add → toggle → delete → reload
+- [x] Validation navigation (React Router)
+- [x] Vérification persistance des données dans `tasks.json`
+- [x] Test API via Postman : statuts 200/201/204, cohérence JSON
 
 ### Docs
-- 📄 `docs/architecture/ARCHITECTURE_S5.md`
-- 📄 `docs/INSTALL.md` → section “Frontend React”
-- 📄 `CHANGELOG.md` → `v0.3.x`
-- 📄 `README.md` → mise à jour “React avancé”
+- ✅ `docs/architecture/ARCHITECTURE_S5.md` — schéma React + API
+- ✅ `CHANGELOG.md` — entrée `v0.3.0` → “Intégration React / API”
+- ✅ `PROGRESSION.md` — jalons S4 et S5 validés
 
 ---
 

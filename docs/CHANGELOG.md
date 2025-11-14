@@ -139,3 +139,19 @@ Format inspiré de **Keep a Changelog** et **SemVer**.
   ```
 
 ---
+
+## [0.4.0] - 2025-11-xx — Frontend Next.js (S6)
+
+### Added
+- Nouveau frontend Next.js dans `frontend/next/`
+- Layout global + navigation
+- Page `/tasks` (CSR) avec `TaskForm` et `TaskList`
+- Page `/server-time` (SSR)
+- Page `/SSG` (SSG + ISR)
+
+### Changed
+- Documentation architecture : `ARCHITECTURE_S6.md`
+- Ajout de la section Next.js dans `INSTALL.md`
+
+### Notes
+- Semaine 7 : API Routes + Authentification

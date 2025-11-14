@@ -121,19 +121,19 @@
 > 🎯 Objectif : migration progressive du front React vers Next.js, avec SSR et structure app.
 
 ### Dev
-- [ ] Initialiser projet Next.js
-- [ ] Pages statiques et dynamiques (`app/`)
-- [ ] Découverte SSR / SSG
-- [ ] Migration partielle depuis React (réutiliser composants)
+- [x] Initialiser projet Next.js
+- [x] Pages statiques et dynamiques (app/)
+- [x] Découverte SSR / SSG
+- [x] Migration partielle depuis React (réutiliser composants)
 
 ### Tests
-- [ ] Vérifier SSR / SSG (rendu côté serveur)
-- [ ] Snapshot tests (Next pages)
+- [x] Vérifier SSR / SSG (rendu côté serveur)
+
 
 ### Docs
-- 📄 `docs/architecture/ARCHITECTURE_S6.md`
-- 📄 `docs/INSTALL.md` → section “Next.js”
-- 📄 `CHANGELOG.md` → `v0.4.0`
+- ✅ `docs/architecture/ARCHITECTURE_S6.md`
+- ✅ `docs/INSTALL.md` → section “Next.js”
+- ✅ `CHANGELOG.md` — entrée `v0.4.0`
 
 ---
 

@@ -99,3 +99,31 @@ docker-compose down
 # Supprimer les volumes si besoin
 docker-compose down -v
 ```
+
+---
+
+# Installation du frontend Next.js (Semaine 6+)
+
+Ce frontend remplace progressivement l'ancien front React (S4–S5).
+
+## Installation
+
+```bash
+cd frontend/next
+npm install
+npm run dev
+# http://localhost:3000
+```
+
+## Scripts disponibles
+
+- `npm run dev` — mode développement
+- `npm run build` — build production
+- `npm start` — serveur production
+
+## Technologies utilisées
+
+- Next.js (App Router)
+- SSR / SSG / ISR
+- Client Components
+- TailwindCSS v4

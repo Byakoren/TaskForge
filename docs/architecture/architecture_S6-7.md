@@ -1,4 +1,4 @@
-# ARCHITECTURE — Semaine 6 (Migration Next.js)
+# ARCHITECTURE — Semaine 6-7 (Migration Next.js)
 
 ## 1. Objectif
 Migrer progressivement le frontend React (S4–S5) vers **Next.js (App Router)** pour bénéficier :
@@ -12,7 +12,7 @@ Migrer progressivement le frontend React (S4–S5) vers **Next.js (App Router)**
 ## 2. Structure du frontend Next.js
 
 ```
-frontend/next/
+web/next/
   app/
     layout.tsx        # Layout global de l'application
     page.tsx          # Page d'accueil (Server Component)

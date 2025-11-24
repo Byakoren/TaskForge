@@ -59,7 +59,7 @@ taskforge/
 │  ├─ ui.js
 │  └─ storage.js
 ├─ backend/            # API Express (S3+)
-├─ frontend/           # React / Next.js (S4+)
+├─ web/           # React / Next.js (S4+)
 └─ docs/               # documentation
 ```
 

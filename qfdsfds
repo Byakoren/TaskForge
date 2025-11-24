@@ -1,0 +1,22 @@
+[35mREADME.md[m[36m:[m- un **[1;31mfrontend[m moderne** (React puis Next.js, SSR/SSG),
+[35mREADME.md[m[36m:[m├─ [1;31mfrontend[m/            # React / Next.js (TypeScript)
+[35mdocs/CHANGELOG.md[m[36m:[m  - Réorganisation des dossiers `[1;31mfrontend[m/` et `backend/`.
+[35mdocs/CHANGELOG.md[m[36m:[m    - `[1;31mfrontend[m/structure.md`
+[35mdocs/CHANGELOG.md[m[36m:[m  cd [1;31mfrontend[m && npm run dev
+[35mdocs/CHANGELOG.md[m[36m:[m- Nouveau [1;31mfrontend[m Next.js dans `[1;31mfrontend[m/next/`
+[35mdocs/INSTALL.md[m[36m:[m# 2️⃣ Installer les dépendances ([1;31mfrontend[m + backend)
+[35mdocs/INSTALL.md[m[36m:[m# Lancer le [1;31mfrontend[m React / Next.js
+[35mdocs/INSTALL.md[m[36m:[mcd ../[1;31mfrontend[m
+[35mdocs/INSTALL.md[m[36m:[mLe [1;31mfrontend[m sera disponible sur **http://localhost:3000**,  
+[35mdocs/INSTALL.md[m[36m:[m> - `[1;31mfrontend[m` → http://localhost:3000  
+[35mdocs/INSTALL.md[m[36m:[m> ⚙️ Les fichiers `deployment.yaml` et `service.yaml` gèrent la mise en place des pods pour le [1;31mfrontend[m, le backend et la base.
+[35mdocs/INSTALL.md[m[36m:[m# Installation du [1;31mfrontend[m Next.js (Semaine 6+)
+[35mdocs/INSTALL.md[m[36m:[mCe [1;31mfrontend[m remplace progressivement l'ancien front React (S4–S5).
+[35mdocs/INSTALL.md[m[36m:[mcd [1;31mfrontend[m/next
+[35mdocs/architecture/architecture_S4-5.md[m[36m:[m├─ [1;31mfrontend[m/
+[35mdocs/architecture/architecture_S4-5.md[m[36m:[mPorts par défaut : **[1;31mfrontend[m 5173**, **backend 3001** (proxy Vite).
+[35mdocs/architecture/architecture_S4-5.md[m[36m:[m**TypeScript ([1;31mfrontend[m/src/types.ts)**
+[35mdocs/architecture/architecture_S6-7.md[m[36m:[mMigrer progressivement le [1;31mfrontend[m React (S4–S5) vers **Next.js (App Router)** pour bénéficier :
+[35mdocs/architecture/architecture_S6-7.md[m[36m:[m## 2. Structure du [1;31mfrontend[m Next.js
+[35mdocs/conventions.md[m[36m:[m├─ [1;31mfrontend[m/           # React / Next.js (S4+)
+[35mdocs/glossary.md[m[36m:[mOrganisation logique du code ([1;31mfrontend[m, backend, data, infra).  

@@ -143,7 +143,7 @@ Format inspiré de **Keep a Changelog** et **SemVer**.
 ## [0.4.0] - 2025-11-xx — Frontend Next.js (S6)
 
 ### Added
-- Nouveau frontend Next.js dans `frontend/next/`
+- Nouveau frontend Next.js dans `web/next/`
 - Layout global + navigation
 - Page `/tasks` (CSR) avec `TaskForm` et `TaskList`
 - Page `/server-time` (SSR)

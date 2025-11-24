@@ -3,6 +3,10 @@
 > Portée : ajout d’un backend **Node.js/Express** exposant l’API REST `/api/tasks`.  
 > Objectif : fournir un point d’accès serveur (MVP) avant la migration BD (S10).
 
+> ⚠️ À partir de la Semaine 7, l’API utilisée par défaut est implémentée dans Next.js (`/api/*`).
+> Le dossier `backend/` (Express) correspond à l’API de la Semaine 3–5 et est conservé à titre pédagogique.
+
+
 ---
 
 ## 1) Vue d’ensemble (flux)

@@ -141,20 +141,24 @@
 > 🎯 Objectif : gestion d’authentification et d’API routes dans Next.js.
 
 ### Dev
-- [ ] Ajouter API Routes (`/api/tasks`)
-- [ ] Authentification JWT / LocalStorage
-- [ ] Middleware de sécurisation
-- [ ] Guard routes (private pages)
+- [ ] Créer les API Routes `/api/tasks` dans Next (GET, POST, PUT, DELETE)
+- [ ] Ajouter une route d’auth simple (ex: `/api/auth/login`) avec un user de test
+- [ ] Mettre en place l’authentification JWT + stockage côté client (LocalStorage ou cookie)
+- [ ] Créer un `AuthContext` pour partager l’état de connexion dans le front
+- [ ] Protéger les pages privées (liste des tâches, etc.) via `middleware.ts` ou guard côté client
+- [ ] Brancher le front Next sur ces nouvelles API Routes (remplacer les anciens appels si besoin)
 
 ### Tests
-- [ ] Auth flow complet (login → token → accès)
-- [ ] Tests API Routes (unit/int)
+- [ ] Tester manuellement le flow complet : login → accès aux tâches → refresh → toujours connecté
+- [ ] Vérifier qu’un utilisateur non connecté est bien redirigé vers `/login`
+- [ ] (Bonus) Ajouter au moins un test d’API sur `/api/tasks` ou `/api/auth/login`
 
 ### Docs
-- 📄 `docs/architecture/ARCHITECTURE_S7.md`
-- 📄 `docs/INSTALL.md` → Next.js Auth
-- 📄 `CHANGELOG.md` → `v0.4.x`
-- 📄 `README.md` → mise à jour Auth
+- 📄 Créer `docs/architecture/ARCHITECTURE_S7.md` (schéma Auth + API Routes)
+- 📄 Mettre à jour `docs/INSTALL.md` avec la partie “Next.js Auth”
+- 📄 Mettre à jour `CHANGELOG.md` avec la version `0.4.x` (Next avancé / Auth)
+- 📄 Mettre à jour le `README.md` pour mentionner l’auth Next.js
+
 
 ---
 

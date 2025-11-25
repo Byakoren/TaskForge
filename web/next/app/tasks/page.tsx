@@ -1,30 +1,17 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import type { Task } from "@/types/task";
+import { useMemo } from "react";
 import { TaskForm } from "@/components/TaskForm";
 import { TaskList } from "@/components/TaskList";
+import { TasksProvider, useTasks } from "@/context/TasksContext";
 
-export default function TasksPage() {
-  const [tasks, setTasks] = useState<Task[]>([]);
+function TasksPageInner() {
+  const { tasks, loading, error, add, toggle, del, editTitle } = useTasks();
 
-  const remaining = useMemo(
-    () => tasks.filter(t => !t.done).length,
-    [tasks]
-  );
+  const remaining = useMemo(() => tasks.filter((t) => !t.done).length, [tasks]);
 
-  function add(title: string) {
-    setTasks(prev => [...prev, { id: crypto.randomUUID(), title, done: false }]);
-  }
-
-  function toggle(id: string) {
-    setTasks(prev => prev.map(t => (
-      t.id === id ? { ...t, done: !t.done } : t
-    )));
-  }
-
-  function del(id: string) {
-    setTasks(prev => prev.filter(t => t.id !== id));
+  if (loading) {
+    return <p>Chargement des tâches…</p>;
   }
 
   return (
@@ -32,8 +19,23 @@ export default function TasksPage() {
       <h1 className="text-xl font-semibold">Tasks</h1>
       <p className="opacity-75 mb-4">{remaining} tâches restantes</p>
 
+      {error && <p className="text-red-500 mb-2">Erreur : {error}</p>}
+
       <TaskForm onAdd={add} />
-      <TaskList tasks={tasks} onToggle={toggle} onDelete={del} />
+      <TaskList
+        tasks={tasks}
+        onToggle={toggle}
+        onDelete={del}
+        onEdit={editTitle}
+      />
     </section>
+  );
+}
+
+export default function TasksPage() {
+  return (
+    <TasksProvider>
+      <TasksPageInner />
+    </TasksProvider>
   );
 }

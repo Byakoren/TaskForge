@@ -1,4 +1,4 @@
-export const dynamic = "force-dynamic"; 
+export const dynamic = "force-dynamic";
 
 export default async function ServerTimePage() {
   const now = new Date().toISOString();

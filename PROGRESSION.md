@@ -141,23 +141,23 @@
 > 🎯 Objectif : gestion d’authentification et d’API routes dans Next.js.
 
 ### Dev
-- [ ] Créer les API Routes `/api/tasks` dans Next (GET, POST, PUT, DELETE)
-- [ ] Ajouter une route d’auth simple (ex: `/api/auth/login`) avec un user de test
-- [ ] Mettre en place l’authentification JWT + stockage côté client (LocalStorage ou cookie)
-- [ ] Créer un `AuthContext` pour partager l’état de connexion dans le front
-- [ ] Protéger les pages privées (liste des tâches, etc.) via `middleware.ts` ou guard côté client
-- [ ] Brancher le front Next sur ces nouvelles API Routes (remplacer les anciens appels si besoin)
+- [x] Créer les API Routes `/api/tasks` dans Next (GET, POST, PUT, DELETE)
+- [x] Ajouter une route d’auth simple (ex: `/api/auth/login`) avec un user de test
+- [x] Mettre en place un token d’auth simple stocké côté client (LocalStorage)
+- [x] Créer un `AuthContext` pour partager l’état de connexion dans le front
+- [x] Protéger la page privée `/tasks` via un guard côté client (redirection vers `/login`)
+- [x] Brancher le front Next (page `/tasks`) sur les API Routes (`/api/tasks`)
 
 ### Tests
-- [ ] Tester manuellement le flow complet : login → accès aux tâches → refresh → toujours connecté
-- [ ] Vérifier qu’un utilisateur non connecté est bien redirigé vers `/login`
-- [ ] (Bonus) Ajouter au moins un test d’API sur `/api/tasks` ou `/api/auth/login`
+- [x] Tester manuellement le flow complet : login → accès aux tâches → refresh → toujours connecté
+- [x] Vérifier qu’un utilisateur non connecté est bien redirigé vers `/login`
+- [x] Tester les endpoints `/api/tasks` et `/api/auth/login` via Postman
 
 ### Docs
-- 📄 Créer `docs/architecture/ARCHITECTURE_S7.md` (schéma Auth + API Routes)
-- 📄 Mettre à jour `docs/INSTALL.md` avec la partie “Next.js Auth”
-- 📄 Mettre à jour `CHANGELOG.md` avec la version `0.4.x` (Next avancé / Auth)
-- 📄 Mettre à jour le `README.md` pour mentionner l’auth Next.js
+- ✅ Créer `docs/architecture/ARCHITECTURE_S7.md` (schéma Auth + API Routes)
+- ✅ Mettre à jour `docs/INSTALL.md` avec la partie “Next.js Auth”
+- ✅ Mettre à jour `CHANGELOG.md` avec la version `0.4.x` (Next avancé / Auth)
+- ✅ Mettre à jour le `README.md` pour mentionner l’auth Next.js
 
 
 ---

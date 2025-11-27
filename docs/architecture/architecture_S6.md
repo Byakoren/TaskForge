@@ -12,7 +12,7 @@ Migrer progressivement le frontend React (S4–S5) vers **Next.js (App Router)**
 ## 2. Structure du frontend Next.js
 
 ```
-frontend/next/
+web/next/
   app/
     layout.tsx        # Layout global de l'application
     page.tsx          # Page d'accueil (Server Component)
@@ -55,13 +55,6 @@ frontend/next/
 - Tailwind CSS (v4)
 - Styles globaux dans `globals.css`
 - Navigation via `<Link>` pour éviter les reloads
-
----
-
-## 5. Suite (S7)
-- API Routes Next.js
-- Authentification JWT
-- Middleware / sécurisation
 
 ---
 

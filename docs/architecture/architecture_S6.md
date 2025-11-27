@@ -1,4 +1,4 @@
-# ARCHITECTURE — Semaine 6-7 (Migration Next.js)
+# ARCHITECTURE — Semaine 6 (Migration Next.js)
 
 ## 1. Objectif
 Migrer progressivement le frontend React (S4–S5) vers **Next.js (App Router)** pour bénéficier :
@@ -55,13 +55,6 @@ web/next/
 - Tailwind CSS (v4)
 - Styles globaux dans `globals.css`
 - Navigation via `<Link>` pour éviter les reloads
-
----
-
-## 5. Suite (S7)
-- API Routes Next.js
-- Authentification JWT
-- Middleware / sécurisation
 
 ---
 

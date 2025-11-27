@@ -140,7 +140,7 @@ Format inspiré de **Keep a Changelog** et **SemVer**.
 
 ---
 
-## [0.4.0] - 2025-11-xx — Frontend Next.js (S6)
+## [0.4.0] - 2025-11-14 — Frontend Next.js (S6)
 
 ### Added
 - Nouveau frontend Next.js dans `web/next/`
@@ -155,3 +155,50 @@ Format inspiré de **Keep a Changelog** et **SemVer**.
 
 ### Notes
 - Semaine 7 : API Routes + Authentification
+
+---
+
+## [0.4.1] - 2025-11-27 — Next.js avancé & Auth (S7)
+
+### Added
+- API Routes Next.js pour les tâches :
+  - `GET /api/tasks` — liste des tâches.
+  - `POST /api/tasks` — création d’une tâche.
+  - `PUT /api/tasks/:id` — mise à jour d’une tâche.
+  - `DELETE /api/tasks/:id` — suppression d’une tâche.
+- Module `app/api/tasks/data.ts` avec :
+  - type `Task` (id, title, status),
+  - stockage en mémoire d’un jeu de tâches de démo,
+  - helpers `listTasks`, `createTask`, `updateTask`, `deleteTask`.
+- Endpoint d’authentification :
+  - `POST /api/auth/login` avec un utilisateur de démo et un token simple.
+- `AuthContext` côté front :
+  - gestion de `user`, `token`, `isAuthenticated` et `loading`,
+  - méthodes `login(email, password)` et `logout()`,
+  - persistance de la session dans `localStorage`.
+- Page `/login` :
+  - formulaire de connexion,
+  - messages d’erreur en cas de mauvais identifiants,
+  - redirection vers `/tasks` en cas de succès.
+- Protection de la page `/tasks` :
+  - redirection vers `/login` si l’utilisateur n’est pas connecté,
+  - affichage de l’email de l’utilisateur connecté + bouton « Se déconnecter ».
+- Documentation d’architecture S7 (`docs/architecture/ARCHITECTURE_S7.md`) détaillant :
+  - la structure des API Routes,
+  - le fonctionnement de l’auth front/back,
+  - les limites actuelles (token pédagogique, stockage en mémoire, etc.).
+
+### Changed
+- Page `/tasks` mise à jour pour consommer les API Routes Next.js (`/api/tasks`) via `TasksContext` au lieu de gérer les tâches uniquement en local.
+- Organisation des contexts front :
+  - `TasksContext` pour la gestion des tâches,
+  - `AuthContext` pour la gestion de l’authentification.
+
+### Removed
+- Anciennes interactions directes avec un store local pour les tâches (remplacées par les appels à l’API Next).
+
+### Security
+- Début de gestion d’authentification (token de démo côté client).
+- ⚠️ L’API `/api/tasks` reste accessible sans vérification de token (choix pédagogique pour l’instant).
+
+---

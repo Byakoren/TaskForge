@@ -13,7 +13,6 @@ function LoginForm() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Si déjà connecté, on renvoie vers /tasks
   useEffect(() => {
     if (!loading && isAuthenticated) {
       router.push("/tasks");

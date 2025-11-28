@@ -37,57 +37,118 @@ function LoginForm() {
   }
 
   if (loading) {
-    return <p>Vérification de la session…</p>;
+    return (
+      <div className="text-sm text-slate-200">
+        Vérification de la session…
+      </div>
+    );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="space-y-1">
-        <label className="block text-sm font-medium">Email</label>
-        <input
-          type="email"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-          className="w-full border rounded px-2 py-1 bg-slate-900 border-slate-700"
-        />
-      </div>
-
-      <div className="space-y-1">
-        <label className="block text-sm font-medium">Mot de passe</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          className="w-full border rounded px-2 py-1 bg-slate-900 border-slate-700"
-        />
-      </div>
-
-      {error && <p className="text-sm text-red-400">{error}</p>}
-
-      <button
-        type="submit"
-        disabled={submitting}
-        className="w-full py-2 rounded bg-blue-500 text-white text-sm font-medium disabled:opacity-60"
-      >
-        {submitting ? "Connexion…" : "Se connecter"}
-      </button>
-
-      <p className="text-xs opacity-70 mt-2">
-        Compte de démo : demo@taskforge.dev / demo123
+    <div className="card card-nohover max-w-md w-full">
+      <h1 className="mb-1 text-lg md:text-xl font-semibold text-center">
+        Connexion à TaskForge
+      </h1>
+      <p className="mb-1 text-[11px] md:text-xs text-center text-slate-400/90">
+        La to-do list que tu forges de tes mains.
       </p>
-    </form>
+      <p className="mb-6 text-xs md:text-sm text-center text-slate-300/80">
+        Connecte-toi pour retrouver ton tableau de tâches.
+      </p>
+
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="mb-1 block text-xs font-medium text-slate-200">
+            Email
+          </label>
+          <input
+            type="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            className="w-full rounded-md border border-white/10 bg-black/40 px-3 py-2 text-sm text-slate-100 outline-none focus:border-violet-400"
+          />
+        </div>
+
+        <div>
+          <label className="mb-1 block text-xs font-medium text-slate-200">
+            Mot de passe
+          </label>
+          <input
+            type="password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            className="w-full rounded-md border border-white/10 bg-black/40 px-3 py-2 text-sm text-slate-100 outline-none focus:border-violet-400"
+          />
+        </div>
+
+        {error && (
+          <p className="text-xs md:text-sm text-red-400">{error}</p>
+        )}
+
+        <button
+          type="submit"
+          disabled={submitting}
+          className="btn-primary w-full justify-center disabled:opacity-60"
+        >
+          {submitting ? "Connexion…" : "Se connecter"}
+        </button>
+      </form>
+
+      <p className="mt-4 text-[11px] md:text-xs text-center text-slate-400">
+        Compte de démo :{" "}
+        <span className="font-medium text-slate-200">
+          demo@taskforge.dev
+        </span>{" "}
+        /{" "}
+        <span className="font-medium text-slate-200">
+          demo123
+        </span>
+      </p>
+    </div>
   );
 }
 
 export default function LoginPage() {
   return (
-    <AuthProvider>
-      <main className="max-w-md mx-auto mt-16 p-4 border border-slate-800 rounded">
-        <h1 className="text-xl font-semibold mb-4 text-center">
-          Connexion à TaskForge
-        </h1>
-        <LoginForm />
+      <main className="app-shell pt-16 lg:pt-24">
+        <section className="grid-2 items-start gap-6">
+          {/* Carte de connexion */}
+          <LoginForm />
+
+          {/* Carte “Pas encore de compte ?” */}
+          <div className="card-compact max-w-sm w-full flex flex-col justify-between">
+            <div>
+              <h2 className="mb-3 text-sm font-semibold text-slate-100">
+                Pas encore de compte ?
+              </h2>
+              <p className="mb-3 text-sm text-slate-300/90">
+                Bientôt, tu pourras créer ton propre compte TaskForge pour
+                garder tes tâches séparées du compte de démo.
+              </p>
+              <ul className="space-y-2 text-xs text-slate-300/80">
+                <li>• Profil personnel et tâches privées.</li>
+                <li>• Historique de tes boards et de tes projets.</li>
+                <li>• Pensé pour un usage quotidien, pas seulement la démo.</li>
+              </ul>
+            </div>
+
+            <div className="mt-5 space-y-2">
+              <button
+                type="button"
+                disabled
+                className="w-full rounded-full px-4 py-2 text-sm font-medium
+                           border border-violet-400/70 text-violet-100/90
+                           bg-transparent cursor-not-allowed opacity-70"
+              >
+                Créer un compte (bientôt)
+              </button>
+              <p className="text-[11px] text-center text-slate-400">
+                En attendant, utilise le compte de démo à gauche pour explorer
+                l&apos;appli et le flux complet de TaskForge.
+              </p>
+            </div>
+          </div>
+        </section>
       </main>
-    </AuthProvider>
   );
 }

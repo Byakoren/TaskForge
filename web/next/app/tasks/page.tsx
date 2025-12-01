@@ -41,19 +41,11 @@ function TasksGate() {
 }
 
 function TasksContent() {
-  const {
-    tasks,
-    add,
-    toggle,
-    del,
-    editTitle,
-    setStatus,
-    loading,
-    error,
-  } = useTasks();
+  const { tasks, add, toggle, del, editTitle, setStatus, loading, error } =
+    useTasks();
 
   const todo = tasks.filter(
-    (t) => t.status === "todo" || (!t.done && !t.status)
+    (t) => t.status === "todo" || (!t.done && !t.status),
   );
   const doing = tasks.filter((t) => t.status === "doing");
   const done = tasks.filter((t) => t.status === "done" || t.done);
@@ -91,15 +83,14 @@ function TasksContent() {
               <span className="board-dot board-dot-todo" />
               <h2 className="board-title">À faire</h2>
             </div>
-            <span className="board-count board-count-todo">
-              {todo.length}
-            </span>
+            <span className="board-count board-count-todo">{todo.length}</span>
           </div>
 
           <ul className="task-list">
             {todo.length === 0 && (
               <li className="empty-state">
-                Rien à faire pour l&apos;instant. Ajoute une tâche pour commencer.
+                Rien à faire pour l&apos;instant. Ajoute une tâche pour
+                commencer.
               </li>
             )}
 
@@ -170,7 +161,7 @@ function TasksContent() {
                     checked={t.done}
                     onChange={() => void toggle(t.id)}
                   />
-                <span className="task-title">{t.title}</span>
+                  <span className="task-title">{t.title}</span>
                 </div>
                 <div className="task-actions">
                   <button
@@ -209,9 +200,7 @@ function TasksContent() {
               <span className="board-dot board-dot-done" />
               <h2 className="board-title">Terminées</h2>
             </div>
-            <span className="board-count board-count-done">
-              {done.length}
-            </span>
+            <span className="board-count board-count-done">{done.length}</span>
           </div>
 
           <ul className="task-list">
@@ -230,9 +219,7 @@ function TasksContent() {
                     checked={t.done}
                     onChange={() => void toggle(t.id)}
                   />
-                  <span className="task-title task-title-done">
-                    {t.title}
-                  </span>
+                  <span className="task-title task-title-done">{t.title}</span>
                 </div>
                 <div className="task-actions">
                   <button

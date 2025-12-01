@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Providers } from "./providers";
 import { NavUser } from "@/components/NavUser";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import Image from "next/image";
 
 export const metadata: Metadata = {
@@ -17,13 +18,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr">
-      <body className="min-h-dvh bg-linear-to-b from-[#0f0c29] via-[#302b63] to-[#24243e] text-slate-100 antialiased">
+      {/* ⚠️ Pas de couleur de texte ici, c’est géré dans globals.css + data-theme */}
+      <body className="min-h-dvh antialiased">
         <Providers>
           {/* Wrapper flex pour footer collé en bas */}
           <div className="flex min-h-dvh flex-col">
             {/* NAVBAR */}
-            <header className="border-b border-white/10 bg-black/30 backdrop-blur">
-              <div className="app-shell flex items-center justify-between py-3">
+            <header className="navbar">
+              <div className="navbar-inner">
                 {/* Groupe gauche : logo + liens */}
                 <div className="flex items-center gap-8">
                   {/* Logo */}
@@ -51,7 +53,7 @@ export default function RootLayout({
                     <Link href="/tasks" className="nav-link">
                       Tasks
                     </Link>
-                    <Link href="/server-time" className="nav-link">
+                    <Link href="/SSR" className="nav-link">
                       SSR
                     </Link>
                     <Link href="/SSG" className="nav-link">
@@ -60,15 +62,16 @@ export default function RootLayout({
                   </nav>
                 </div>
 
-                <NavUser />
+                {/* Groupe droite : toggle thème + user */}
+                <div className="flex items-center gap-3">
+                  <ThemeToggle />
+                  <NavUser />
+                </div>
               </div>
             </header>
 
-
             {/* Contenu des pages */}
-            <div className="flex-1">
-              {children}
-            </div>
+            <div className="flex-1">{children}</div>
 
             {/* FOOTER */}
             <footer className="mt-8 border-t border-white/10 bg-black/20">

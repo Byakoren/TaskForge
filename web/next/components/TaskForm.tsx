@@ -32,7 +32,7 @@ export function TaskForm({ onAdd }: TaskFormProps) {
         placeholder="Ajouter une tâche…"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        className="flex-1 rounded-lg border border-white/10 bg-black/40 px-3 py-2.5 text-sm text-slate-100 placeholder:text-slate-500 outline-none focus:border-violet-400 focus:ring-1 focus:ring-violet-500/60"
+        className="task-input flex-1"
       />
 
       <button

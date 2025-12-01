@@ -23,14 +23,14 @@ export function NavUser() {
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-black/40 text-xs font-semibold text-slate-100 hover:bg-white/10"
+        className="nav-user-btn"
         aria-label="Menu utilisateur"
       >
         {initial}
       </button>
 
       {open && (
-        <div className="absolute right-0 mt-2 w-56 overflow-hidden rounded-xl border border-white/10 bg-black/90 shadow-xl backdrop-blur">
+        <div className="nav-user-menu">
           <div className="border-b border-white/10 px-3 py-2">
             <p className="text-[10px] uppercase tracking-[0.18em] text-slate-400">
               Connecté

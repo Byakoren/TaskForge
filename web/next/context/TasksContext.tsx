@@ -7,7 +7,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import type { Task, TaskStatus } from "@/types/task";
+import type { Task } from "@/types/task";
 
 type ApiTaskStatus = "todo" | "doing" | "done";
 

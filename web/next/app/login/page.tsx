@@ -2,7 +2,7 @@
 
 import { useState, useEffect, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { AuthProvider, useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 
 function LoginForm() {
   const router = useRouter();
@@ -38,9 +38,7 @@ function LoginForm() {
 
   if (loading) {
     return (
-      <div className="text-sm text-slate-200">
-        Vérification de la session…
-      </div>
+      <div className="text-sm text-slate-200">Vérification de la session…</div>
     );
   }
 
@@ -81,9 +79,7 @@ function LoginForm() {
           />
         </div>
 
-        {error && (
-          <p className="text-xs md:text-sm text-red-400">{error}</p>
-        )}
+        {error && <p className="text-xs md:text-sm text-red-400">{error}</p>}
 
         <button
           type="submit"
@@ -96,13 +92,8 @@ function LoginForm() {
 
       <p className="mt-4 text-[11px] md:text-xs text-center text-slate-400">
         Compte de démo :{" "}
-        <span className="font-medium text-slate-200">
-          demo@taskforge.dev
-        </span>{" "}
-        /{" "}
-        <span className="font-medium text-slate-200">
-          demo123
-        </span>
+        <span className="font-medium text-slate-200">demo@taskforge.dev</span> /{" "}
+        <span className="font-medium text-slate-200">demo123</span>
       </p>
     </div>
   );
@@ -110,45 +101,45 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-      <main className="app-shell pt-16 lg:pt-24">
-        <section className="grid-2 items-start gap-6">
-          {/* Carte de connexion */}
-          <LoginForm />
+    <main className="app-shell pt-16 lg:pt-24">
+      <section className="grid-2 items-start gap-6">
+        {/* Carte de connexion */}
+        <LoginForm />
 
-          {/* Carte “Pas encore de compte ?” */}
-          <div className="card-compact max-w-sm w-full flex flex-col justify-between">
-            <div>
-              <h2 className="mb-3 text-sm font-semibold text-slate-100">
-                Pas encore de compte ?
-              </h2>
-              <p className="mb-3 text-sm text-slate-300/90">
-                Bientôt, tu pourras créer ton propre compte TaskForge pour
-                garder tes tâches séparées du compte de démo.
-              </p>
-              <ul className="space-y-2 text-xs text-slate-300/80">
-                <li>• Profil personnel et tâches privées.</li>
-                <li>• Historique de tes boards et de tes projets.</li>
-                <li>• Pensé pour un usage quotidien, pas seulement la démo.</li>
-              </ul>
-            </div>
+        {/* Carte “Pas encore de compte ?” */}
+        <div className="card-compact max-w-sm w-full flex flex-col justify-between">
+          <div>
+            <h2 className="mb-3 text-sm font-semibold text-slate-100">
+              Pas encore de compte ?
+            </h2>
+            <p className="mb-3 text-sm text-slate-300/90">
+              Bientôt, tu pourras créer ton propre compte TaskForge pour garder
+              tes tâches séparées du compte de démo.
+            </p>
+            <ul className="space-y-2 text-xs text-slate-300/80">
+              <li>• Profil personnel et tâches privées.</li>
+              <li>• Historique de tes boards et de tes projets.</li>
+              <li>• Pensé pour un usage quotidien, pas seulement la démo.</li>
+            </ul>
+          </div>
 
-            <div className="mt-5 space-y-2">
-              <button
-                type="button"
-                disabled
-                className="w-full rounded-full px-4 py-2 text-sm font-medium
+          <div className="mt-5 space-y-2">
+            <button
+              type="button"
+              disabled
+              className="w-full rounded-full px-4 py-2 text-sm font-medium
                            border border-violet-400/70 text-violet-100/90
                            bg-transparent cursor-not-allowed opacity-70"
-              >
-                Créer un compte (bientôt)
-              </button>
-              <p className="text-[11px] text-center text-slate-400">
-                En attendant, utilise le compte de démo à gauche pour explorer
-                l&apos;appli et le flux complet de TaskForge.
-              </p>
-            </div>
+            >
+              Créer un compte (bientôt)
+            </button>
+            <p className="text-[11px] text-center text-slate-400">
+              En attendant, utilise le compte de démo à gauche pour explorer
+              l&apos;appli et le flux complet de TaskForge.
+            </p>
           </div>
-        </section>
-      </main>
+        </div>
+      </section>
+    </main>
   );
 }

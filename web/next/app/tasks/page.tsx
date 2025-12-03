@@ -1,11 +1,20 @@
 "use client";
 
-import { useEffect } from "react";
+import type { ReactNode, PointerEvent } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+
+import {
+  DndContext,
+  type DragEndEvent,
+  useDroppable,
+  useDraggable,
+} from "@dnd-kit/core";
 
 import { useAuth } from "@/context/AuthContext";
 import { TasksProvider, useTasks } from "@/context/TasksContext";
 import { TaskForm } from "@/components/TaskForm";
+import type { Task } from "@/types/task";
 
 export default function TasksPage() {
   return (
@@ -40,6 +49,92 @@ function TasksGate() {
   return <TasksContent />;
 }
 
+type ColumnId = "todo" | "doing" | "done";
+
+function stopDrag(e: PointerEvent) {
+  e.stopPropagation();
+}
+
+type BoardColumnProps = {
+  id: ColumnId;
+  title: string;
+  dotClass: string;
+  count: number;
+  emptyLabel: string;
+  children: ReactNode;
+};
+
+function BoardColumn({
+  id,
+  title,
+  dotClass,
+  count,
+  emptyLabel,
+  children,
+}: BoardColumnProps) {
+  const { setNodeRef, isOver } = useDroppable({ id });
+
+  return (
+    <div
+      ref={setNodeRef}
+      className={`board-column ${
+        isOver
+          ? "ring-2 ring-violet-400/70 ring-offset-2 ring-offset-black/40"
+          : ""
+      }`}
+    >
+      <div className="board-column-header">
+        <div className="board-header-left">
+          <span className={`board-dot ${dotClass}`} />
+          <h2 className="board-title">{title}</h2>
+        </div>
+        <span className={`board-count board-count-${id}`}>{count}</span>
+      </div>
+
+      <ul className="task-list">
+        {count === 0 && <li className="empty-state">{emptyLabel}</li>}
+        {children}
+      </ul>
+    </div>
+  );
+}
+
+type DraggableTaskCardProps = {
+  task: Task;
+  column: ColumnId;
+  children: ReactNode;
+};
+
+function DraggableTaskCard({ task, column, children }: DraggableTaskCardProps) {
+  const { attributes, listeners, setNodeRef, transform, isDragging } =
+    useDraggable({
+      id: task.id,
+      data: { column },
+    });
+
+  const transformStyle = transform
+    ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
+    : undefined;
+
+  const style = {
+    transform: transformStyle,
+    cursor: isDragging ? "grabbing" : "grab",
+    zIndex: isDragging ? 10 : 1,
+  } as const;
+
+  return (
+    <li
+      ref={setNodeRef}
+      style={style}
+      className="task-card"
+      {...attributes}
+      {...listeners}
+    >
+      {children}
+    </li>
+  );
+}
+
 function TasksContent() {
   const { tasks, add, toggle, del, editTitle, setStatus, loading, error } =
     useTasks();
@@ -52,6 +147,48 @@ function TasksContent() {
 
   const remainingCount = todo.length + doing.length;
 
+  // === Édition inline du titre ===
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [draftTitle, setDraftTitle] = useState("");
+
+  function startEdit(task: Task) {
+    setEditingId(task.id);
+    setDraftTitle(task.title);
+  }
+
+  async function saveEdit() {
+    if (!editingId) return;
+    const title = draftTitle.trim();
+    if (!title) {
+      setEditingId(null);
+      return;
+    }
+    await editTitle(editingId, title);
+    setEditingId(null);
+  }
+
+  function cancelEdit() {
+    setEditingId(null);
+  }
+
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+    if (!over) return;
+
+    const columnId = over.id;
+    if (columnId !== "todo" && columnId !== "doing" && columnId !== "done") {
+      return;
+    }
+
+    const taskId = String(active.id);
+    const task = tasks.find((t) => t.id === taskId);
+    if (!task) return;
+
+    if (task.status === columnId) return;
+
+    void setStatus(taskId, columnId);
+  }
+
   return (
     <main className="tasks-shell">
       <header className="page-header">
@@ -63,7 +200,9 @@ function TasksContent() {
             : error
               ? `Erreur : ${error}`
               : remainingCount > 0
-                ? `${remainingCount} tâche${remainingCount > 1 ? "s" : ""} à terminer.`
+                ? `${remainingCount} tâche${
+                    remainingCount > 1 ? "s" : ""
+                  } à terminer.`
                 : "Tu es à jour, bien ouéj ✨"}
         </p>
       </header>
@@ -74,150 +213,160 @@ function TasksContent() {
         </div>
       </section>
 
-      {/* Board 3 colonnes */}
-      <section className="board">
-        {/* À faire */}
-        <div className="board-column">
-          <div className="board-column-header">
-            <div className="board-header-left">
-              <span className="board-dot board-dot-todo" />
-              <h2 className="board-title">À faire</h2>
-            </div>
-            <span className="board-count board-count-todo">{todo.length}</span>
-          </div>
-
-          <ul className="task-list">
-            {todo.length === 0 && (
-              <li className="empty-state">
-                Rien à faire pour l&apos;instant. Ajoute une tâche pour
-                commencer.
-              </li>
-            )}
-
+      <DndContext onDragEnd={handleDragEnd}>
+        <section className="board">
+          {/* À faire */}
+          <BoardColumn
+            id="todo"
+            title="À faire"
+            dotClass="board-dot-todo"
+            count={todo.length}
+            emptyLabel="Rien à faire pour l'instant. Ajoute une tâche pour commencer."
+          >
             {todo.map((t) => (
-              <li key={t.id} className="task-card">
+              <DraggableTaskCard key={t.id} task={t} column="todo">
                 <div className="task-main">
                   <input
                     type="checkbox"
                     checked={t.done}
                     onChange={() => void toggle(t.id)}
+                    onPointerDown={stopDrag}
                   />
-                  <span className="task-title">{t.title}</span>
+                  {editingId === t.id ? (
+                    <input
+                      className="ml-2 flex-1 bg-transparent border-b border-violet-400/70 text-sm text-slate-100 outline-none"
+                      value={draftTitle}
+                      onChange={(e) => setDraftTitle(e.target.value)}
+                      onPointerDown={stopDrag}
+                      onKeyDown={(e) => {
+                        e.stopPropagation();
+
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          void saveEdit();
+                        } else if (e.key === "Escape") {
+                          e.preventDefault();
+                          cancelEdit();
+                        }
+                      }}
+                      onBlur={() => void saveEdit()}
+                      autoFocus
+                    />
+                  ) : (
+                    <span className="task-title">{t.title}</span>
+                  )}
                 </div>
                 <div className="task-actions">
                   <button
                     className="task-link-btn"
                     onClick={() => void setStatus(t.id, "doing")}
+                    onPointerDown={stopDrag}
                   >
                     En cours
                   </button>
                   <button
                     className="task-link-btn"
-                    onClick={() => {
-                      const next = window.prompt("Nouveau titre :", t.title);
-                      if (next !== null) {
-                        void editTitle(t.id, next);
-                      }
-                    }}
+                    onClick={() => startEdit(t)}
+                    onPointerDown={stopDrag}
                   >
                     Modifier
                   </button>
                   <button
                     className="task-link-btn"
                     onClick={() => void del(t.id)}
+                    onPointerDown={stopDrag}
                   >
                     Supprimer
                   </button>
                 </div>
-              </li>
+              </DraggableTaskCard>
             ))}
-          </ul>
-        </div>
+          </BoardColumn>
 
-        {/* En cours */}
-        <div className="board-column">
-          <div className="board-column-header">
-            <div className="board-header-left">
-              <span className="board-dot board-dot-doing" />
-              <h2 className="board-title">En cours</h2>
-            </div>
-            <span className="board-count board-count-doing">
-              {doing.length}
-            </span>
-          </div>
-
-          <ul className="task-list">
-            {doing.length === 0 && (
-              <li className="empty-state">
-                Passe une tâche en cours pour la retrouver ici.
-              </li>
-            )}
-
+          {/* En cours */}
+          <BoardColumn
+            id="doing"
+            title="En cours"
+            dotClass="board-dot-doing"
+            count={doing.length}
+            emptyLabel="Passe une tâche en cours pour la retrouver ici."
+          >
             {doing.map((t) => (
-              <li key={t.id} className="task-card">
+              <DraggableTaskCard key={t.id} task={t} column="doing">
                 <div className="task-main">
                   <input
                     type="checkbox"
                     checked={t.done}
                     onChange={() => void toggle(t.id)}
+                    onPointerDown={stopDrag}
                   />
-                  <span className="task-title">{t.title}</span>
+                  {editingId === t.id ? (
+                    <input
+                      className="ml-2 flex-1 bg-transparent border-b border-violet-400/70 text-sm text-slate-100 outline-none"
+                      value={draftTitle}
+                      onChange={(e) => setDraftTitle(e.target.value)}
+                      onPointerDown={stopDrag}
+                      onKeyDown={(e) => {
+                        e.stopPropagation();
+
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          void saveEdit();
+                        } else if (e.key === "Escape") {
+                          e.preventDefault();
+                          cancelEdit();
+                        }
+                      }}
+                      onBlur={() => void saveEdit()}
+                      autoFocus
+                    />
+                  ) : (
+                    <span className="task-title">{t.title}</span>
+                  )}
                 </div>
                 <div className="task-actions">
                   <button
                     className="task-link-btn"
                     onClick={() => void setStatus(t.id, "todo")}
+                    onPointerDown={stopDrag}
                   >
                     À faire
                   </button>
                   <button
                     className="task-link-btn"
-                    onClick={() => {
-                      const next = window.prompt("Nouveau titre :", t.title);
-                      if (next !== null) {
-                        void editTitle(t.id, next);
-                      }
-                    }}
+                    onClick={() => startEdit(t)}
+                    onPointerDown={stopDrag}
                   >
                     Modifier
                   </button>
                   <button
                     className="task-link-btn"
                     onClick={() => void del(t.id)}
+                    onPointerDown={stopDrag}
                   >
                     Supprimer
                   </button>
                 </div>
-              </li>
+              </DraggableTaskCard>
             ))}
-          </ul>
-        </div>
+          </BoardColumn>
 
-        {/* Terminées */}
-        <div className="board-column">
-          <div className="board-column-header">
-            <div className="board-header-left">
-              <span className="board-dot board-dot-done" />
-              <h2 className="board-title">Terminées</h2>
-            </div>
-            <span className="board-count board-count-done">{done.length}</span>
-          </div>
-
-          <ul className="task-list">
-            {done.length === 0 && (
-              <li className="empty-state">
-                Aucune tâche terminée pour le moment. Tu peux cocher les tâches
-                quand elles sont faites.
-              </li>
-            )}
-
+          {/* Terminées */}
+          <BoardColumn
+            id="done"
+            title="Terminées"
+            dotClass="board-dot-done"
+            count={done.length}
+            emptyLabel="Aucune tâche terminée pour le moment. Tu peux cocher les tâches quand elles sont faites."
+          >
             {done.map((t) => (
-              <li key={t.id} className="task-card">
+              <DraggableTaskCard key={t.id} task={t} column="done">
                 <div className="task-main">
                   <input
                     type="checkbox"
                     checked={t.done}
                     onChange={() => void toggle(t.id)}
+                    onPointerDown={stopDrag}
                   />
                   <span className="task-title task-title-done">{t.title}</span>
                 </div>
@@ -225,15 +374,16 @@ function TasksContent() {
                   <button
                     className="task-link-btn"
                     onClick={() => void del(t.id)}
+                    onPointerDown={stopDrag}
                   >
                     Supprimer
                   </button>
                 </div>
-              </li>
+              </DraggableTaskCard>
             ))}
-          </ul>
-        </div>
-      </section>
+          </BoardColumn>
+        </section>
+      </DndContext>
     </main>
   );
 }

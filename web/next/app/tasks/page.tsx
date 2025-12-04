@@ -139,13 +139,51 @@ function TasksContent() {
   const { tasks, add, toggle, del, editTitle, setStatus, loading, error } =
     useTasks();
 
-  const todo = tasks.filter(
+  // === Recherche ===
+  const [query, setQuery] = useState("");
+  const normalizedQuery = query.trim().toLowerCase();
+
+  function matchesQuery(task: Task) {
+    if (!normalizedQuery) return true;
+    return task.title.toLowerCase().includes(normalizedQuery);
+  }
+
+  // === Filtres de colonnes ===
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [visibleColumns, setVisibleColumns] = useState<{
+    todo: boolean;
+    doing: boolean;
+    done: boolean;
+  }>({
+    todo: true,
+    doing: true,
+    done: true,
+  });
+
+  function toggleColumn(key: keyof typeof visibleColumns) {
+    setVisibleColumns((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  }
+
+  function resetColumns() {
+    setVisibleColumns({ todo: true, doing: true, done: true });
+  }
+
+  // === Split par colonne (données brutes) ===
+  const rawTodo = tasks.filter(
     (t) => t.status === "todo" || (!t.done && !t.status),
   );
-  const doing = tasks.filter((t) => t.status === "doing");
-  const done = tasks.filter((t) => t.status === "done" || t.done);
+  const rawDoing = tasks.filter((t) => t.status === "doing");
+  const rawDone = tasks.filter((t) => t.status === "done" || t.done);
 
-  const remainingCount = todo.length + doing.length;
+  const remainingCount = rawTodo.length + rawDoing.length;
+
+  // === Application du filtre de recherche ===
+  const todo = rawTodo.filter(matchesQuery);
+  const doing = rawDoing.filter(matchesQuery);
+  const done = rawDone.filter(matchesQuery);
 
   // === Édition inline du titre ===
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -207,181 +245,289 @@ function TasksContent() {
         </p>
       </header>
 
+      {/* Formulaire + recherche + bouton filtres */}
       <section className="mb-5 flex flex-col gap-3">
         <div className="card-static">
           <TaskForm onAdd={add} />
+        </div>
+
+        {/* Barre de recherche + filtres */}
+        <div className="card-static relative flex items-center gap-4">
+          <label
+            htmlFor="task-search"
+            className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-300"
+          >
+            Rechercher
+          </label>
+
+          <input
+            id="task-search"
+            type="search"
+            placeholder="Rechercher une tâche…"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="task-input flex-1"
+          />
+
+          <div className="flex items-center gap-3">
+            {query && (
+              <button
+                type="button"
+                onClick={() => setQuery("")}
+                className="text-[11px] text-slate-400 hover:text-slate-200"
+              >
+                Effacer
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => setFiltersOpen((o) => !o)}
+              className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[11px] font-medium text-slate-200 hover:bg-white/10 transition"
+            >
+              <span className="text-xs">☰</span>
+              <span>Filtres</span>
+            </button>
+          </div>
+
+          {filtersOpen && (
+            <div className="mt-3 rounded-xl border border-white/10 bg-black/80 p-3 text-xs shadow-xl md:absolute md:right-4 md:top-12 md:w-64 md:mt-0">
+              <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-400">
+                Colonnes visibles
+              </p>
+
+              <div className="space-y-1">
+                <label className="flex items-center gap-2 text-[11px] text-slate-200">
+                  <input
+                    type="checkbox"
+                    checked={visibleColumns.todo}
+                    onChange={() => toggleColumn("todo")}
+                    className="h-3 w-3 rounded border border-white/30 bg-black/40"
+                  />
+                  <span>À faire</span>
+                </label>
+
+                <label className="flex items-center gap-2 text-[11px] text-slate-200">
+                  <input
+                    type="checkbox"
+                    checked={visibleColumns.doing}
+                    onChange={() => toggleColumn("doing")}
+                    className="h-3 w-3 rounded border border-white/30 bg-black/40"
+                  />
+                  <span>En cours</span>
+                </label>
+
+                <label className="flex items-center gap-2 text-[11px] text-slate-200">
+                  <input
+                    type="checkbox"
+                    checked={visibleColumns.done}
+                    onChange={() => toggleColumn("done")}
+                    className="h-3 w-3 rounded border border-white/30 bg-black/40"
+                  />
+                  <span>Terminées</span>
+                </label>
+              </div>
+
+              <button
+                type="button"
+                onClick={resetColumns}
+                className="mt-2 text-[11px] text-slate-400 hover:text-slate-200"
+              >
+                Réinitialiser
+              </button>
+            </div>
+          )}
         </div>
       </section>
 
       <DndContext onDragEnd={handleDragEnd}>
         <section className="board">
           {/* À faire */}
-          <BoardColumn
-            id="todo"
-            title="À faire"
-            dotClass="board-dot-todo"
-            count={todo.length}
-            emptyLabel="Rien à faire pour l'instant. Ajoute une tâche pour commencer."
-          >
-            {todo.map((t) => (
-              <DraggableTaskCard key={t.id} task={t} column="todo">
-                <div className="task-main">
-                  <input
-                    type="checkbox"
-                    checked={t.done}
-                    onChange={() => void toggle(t.id)}
-                    onPointerDown={stopDrag}
-                  />
-                  {editingId === t.id ? (
+          {visibleColumns.todo && (
+            <BoardColumn
+              id="todo"
+              title="À faire"
+              dotClass="board-dot-todo"
+              count={todo.length}
+              emptyLabel={
+                normalizedQuery
+                  ? "Aucune tâche ne correspond à ta recherche dans cette colonne."
+                  : "Rien à faire pour l'instant. Ajoute une tâche pour commencer."
+              }
+            >
+              {todo.map((t) => (
+                <DraggableTaskCard key={t.id} task={t} column="todo">
+                  <div className="task-main">
                     <input
-                      className="ml-2 flex-1 bg-transparent border-b border-violet-400/70 text-sm text-slate-100 outline-none"
-                      value={draftTitle}
-                      onChange={(e) => setDraftTitle(e.target.value)}
+                      type="checkbox"
+                      checked={t.done}
+                      onChange={() => void toggle(t.id)}
                       onPointerDown={stopDrag}
-                      onKeyDown={(e) => {
-                        e.stopPropagation();
-
-                        if (e.key === "Enter") {
-                          e.preventDefault();
-                          void saveEdit();
-                        } else if (e.key === "Escape") {
-                          e.preventDefault();
-                          cancelEdit();
-                        }
-                      }}
-                      onBlur={() => void saveEdit()}
-                      autoFocus
                     />
-                  ) : (
-                    <span className="task-title">{t.title}</span>
-                  )}
-                </div>
-                <div className="task-actions">
-                  <button
-                    className="task-link-btn"
-                    onClick={() => void setStatus(t.id, "doing")}
-                    onPointerDown={stopDrag}
-                  >
-                    En cours
-                  </button>
-                  <button
-                    className="task-link-btn"
-                    onClick={() => startEdit(t)}
-                    onPointerDown={stopDrag}
-                  >
-                    Modifier
-                  </button>
-                  <button
-                    className="task-link-btn"
-                    onClick={() => void del(t.id)}
-                    onPointerDown={stopDrag}
-                  >
-                    Supprimer
-                  </button>
-                </div>
-              </DraggableTaskCard>
-            ))}
-          </BoardColumn>
+                    {editingId === t.id ? (
+                      <input
+                        className="ml-2 flex-1 bg-transparent border-b border-violet-400/70 text-sm text-slate-100 outline-none"
+                        value={draftTitle}
+                        onChange={(e) => setDraftTitle(e.target.value)}
+                        onPointerDown={stopDrag}
+                        onKeyDown={(e) => {
+                          e.stopPropagation();
+
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            void saveEdit();
+                          } else if (e.key === "Escape") {
+                            e.preventDefault();
+                            cancelEdit();
+                          }
+                        }}
+                        onBlur={() => void saveEdit()}
+                        autoFocus
+                      />
+                    ) : (
+                      <span className="task-title">{t.title}</span>
+                    )}
+                  </div>
+                  <div className="task-actions">
+                    <button
+                      className="task-link-btn"
+                      onClick={() => void setStatus(t.id, "doing")}
+                      onPointerDown={stopDrag}
+                    >
+                      En cours
+                    </button>
+                    <button
+                      className="task-link-btn"
+                      onClick={() => startEdit(t)}
+                      onPointerDown={stopDrag}
+                    >
+                      Modifier
+                    </button>
+                    <button
+                      className="task-link-btn"
+                      onClick={() => void del(t.id)}
+                      onPointerDown={stopDrag}
+                    >
+                      Supprimer
+                    </button>
+                  </div>
+                </DraggableTaskCard>
+              ))}
+            </BoardColumn>
+          )}
 
           {/* En cours */}
-          <BoardColumn
-            id="doing"
-            title="En cours"
-            dotClass="board-dot-doing"
-            count={doing.length}
-            emptyLabel="Passe une tâche en cours pour la retrouver ici."
-          >
-            {doing.map((t) => (
-              <DraggableTaskCard key={t.id} task={t} column="doing">
-                <div className="task-main">
-                  <input
-                    type="checkbox"
-                    checked={t.done}
-                    onChange={() => void toggle(t.id)}
-                    onPointerDown={stopDrag}
-                  />
-                  {editingId === t.id ? (
+          {visibleColumns.doing && (
+            <BoardColumn
+              id="doing"
+              title="En cours"
+              dotClass="board-dot-doing"
+              count={doing.length}
+              emptyLabel={
+                normalizedQuery
+                  ? "Aucune tâche ne correspond à ta recherche dans cette colonne."
+                  : "Passe une tâche en cours pour la retrouver ici."
+              }
+            >
+              {doing.map((t) => (
+                <DraggableTaskCard key={t.id} task={t} column="doing">
+                  <div className="task-main">
                     <input
-                      className="ml-2 flex-1 bg-transparent border-b border-violet-400/70 text-sm text-slate-100 outline-none"
-                      value={draftTitle}
-                      onChange={(e) => setDraftTitle(e.target.value)}
+                      type="checkbox"
+                      checked={t.done}
+                      onChange={() => void toggle(t.id)}
                       onPointerDown={stopDrag}
-                      onKeyDown={(e) => {
-                        e.stopPropagation();
-
-                        if (e.key === "Enter") {
-                          e.preventDefault();
-                          void saveEdit();
-                        } else if (e.key === "Escape") {
-                          e.preventDefault();
-                          cancelEdit();
-                        }
-                      }}
-                      onBlur={() => void saveEdit()}
-                      autoFocus
                     />
-                  ) : (
-                    <span className="task-title">{t.title}</span>
-                  )}
-                </div>
-                <div className="task-actions">
-                  <button
-                    className="task-link-btn"
-                    onClick={() => void setStatus(t.id, "todo")}
-                    onPointerDown={stopDrag}
-                  >
-                    À faire
-                  </button>
-                  <button
-                    className="task-link-btn"
-                    onClick={() => startEdit(t)}
-                    onPointerDown={stopDrag}
-                  >
-                    Modifier
-                  </button>
-                  <button
-                    className="task-link-btn"
-                    onClick={() => void del(t.id)}
-                    onPointerDown={stopDrag}
-                  >
-                    Supprimer
-                  </button>
-                </div>
-              </DraggableTaskCard>
-            ))}
-          </BoardColumn>
+                    {editingId === t.id ? (
+                      <input
+                        className="ml-2 flex-1 bg-transparent border-b border-violet-400/70 text-sm text-slate-100 outline-none"
+                        value={draftTitle}
+                        onChange={(e) => setDraftTitle(e.target.value)}
+                        onPointerDown={stopDrag}
+                        onKeyDown={(e) => {
+                          e.stopPropagation();
+
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            void saveEdit();
+                          } else if (e.key === "Escape") {
+                            e.preventDefault();
+                            cancelEdit();
+                          }
+                        }}
+                        onBlur={() => void saveEdit()}
+                        autoFocus
+                      />
+                    ) : (
+                      <span className="task-title">{t.title}</span>
+                    )}
+                  </div>
+                  <div className="task-actions">
+                    <button
+                      className="task-link-btn"
+                      onClick={() => void setStatus(t.id, "todo")}
+                      onPointerDown={stopDrag}
+                    >
+                      À faire
+                    </button>
+                    <button
+                      className="task-link-btn"
+                      onClick={() => startEdit(t)}
+                      onPointerDown={stopDrag}
+                    >
+                      Modifier
+                    </button>
+                    <button
+                      className="task-link-btn"
+                      onClick={() => void del(t.id)}
+                      onPointerDown={stopDrag}
+                    >
+                      Supprimer
+                    </button>
+                  </div>
+                </DraggableTaskCard>
+              ))}
+            </BoardColumn>
+          )}
 
           {/* Terminées */}
-          <BoardColumn
-            id="done"
-            title="Terminées"
-            dotClass="board-dot-done"
-            count={done.length}
-            emptyLabel="Aucune tâche terminée pour le moment. Tu peux cocher les tâches quand elles sont faites."
-          >
-            {done.map((t) => (
-              <DraggableTaskCard key={t.id} task={t} column="done">
-                <div className="task-main">
-                  <input
-                    type="checkbox"
-                    checked={t.done}
-                    onChange={() => void toggle(t.id)}
-                    onPointerDown={stopDrag}
-                  />
-                  <span className="task-title task-title-done">{t.title}</span>
-                </div>
-                <div className="task-actions">
-                  <button
-                    className="task-link-btn"
-                    onClick={() => void del(t.id)}
-                    onPointerDown={stopDrag}
-                  >
-                    Supprimer
-                  </button>
-                </div>
-              </DraggableTaskCard>
-            ))}
-          </BoardColumn>
+          {visibleColumns.done && (
+            <BoardColumn
+              id="done"
+              title="Terminées"
+              dotClass="board-dot-done"
+              count={done.length}
+              emptyLabel={
+                normalizedQuery
+                  ? "Aucune tâche ne correspond à ta recherche dans cette colonne."
+                  : "Aucune tâche terminée pour le moment. Tu peux cocher les tâches quand elles sont faites."
+              }
+            >
+              {done.map((t) => (
+                <DraggableTaskCard key={t.id} task={t} column="done">
+                  <div className="task-main">
+                    <input
+                      type="checkbox"
+                      checked={t.done}
+                      onChange={() => void toggle(t.id)}
+                      onPointerDown={stopDrag}
+                    />
+                    <span className="task-title task-title-done">
+                      {t.title}
+                    </span>
+                  </div>
+                  <div className="task-actions">
+                    <button
+                      className="task-link-btn"
+                      onClick={() => void del(t.id)}
+                      onPointerDown={stopDrag}
+                    >
+                      Supprimer
+                    </button>
+                  </div>
+                </DraggableTaskCard>
+              ))}
+            </BoardColumn>
+          )}
         </section>
       </DndContext>
     </main>

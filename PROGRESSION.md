@@ -166,19 +166,16 @@
 > 🎯 Objectif : améliorer l’expérience utilisateur (DnD, filtres, thèmes, accessibilité).
 
 ### Dev
-- [ ] Drag & Drop (dnd-kit)
-- [ ] Filtres / recherche (debounce)
-- [ ] Thème clair/sombre (persisté)
-- [ ] Accessibilité (focus visible, ARIA)
+- [x] Drag & Drop (dnd-kit) sur le board 3 colonnes
+- [x] Filtres / recherche (local) sur les tâches
+- [x] Thème clair/sombre avec toggle et persistance (`localStorage`)
+- [x] Accessibilité de base (focus & ARIA pour menu utilisateur et panneau de filtres)
 
 ### Tests
-- [ ] Tests manuels DnD + filtres
-- [ ] Audit A11y rapide (axe ou lighthouse)
+- [x] Tests manuels DnD + filtres, light/dark mode
 
 ### Docs
-- 📄 `docs/architecture/ARCHITECTURE_S8.md`
-- 📄 `docs/ui-guidelines.md` → créer
-- 📄 `CHANGELOG.md` → `v0.5.0`
+- ✅ `docs/architecture/ARCHITECTURE_S8.md`
 
 ---
 

@@ -9,7 +9,6 @@ import {
 } from "react";
 import type { Task } from "@/types/task";
 
-// Type côté API Next
 type ApiTaskStatus = "todo" | "doing" | "done";
 
 type ApiTask = {
@@ -27,6 +26,7 @@ type TasksContextValue = {
   toggle: (id: string) => Promise<void>;
   del: (id: string) => Promise<void>;
   editTitle: (id: string, newTitle: string) => Promise<void>;
+  setStatus: (id: string, status: ApiTaskStatus) => Promise<void>;
 };
 
 const TasksContext = createContext<TasksContextValue | undefined>(undefined);
@@ -35,6 +35,7 @@ function apiTaskToTask(apiTask: ApiTask): Task {
   return {
     id: apiTask.id,
     title: apiTask.title,
+    status: apiTask.status,
     done: apiTask.status === "done",
   };
 }
@@ -89,26 +90,10 @@ export function TasksProvider({ children }: { children: ReactNode }) {
     const current = tasks.find((task) => task.id === id);
     if (!current) return;
 
-    const nextDone = !current.done;
+    const nextStatus: ApiTaskStatus =
+      current.status === "done" ? "todo" : "done";
 
-    const res = await fetch(`/api/tasks/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        status: nextDone ? "done" : "todo",
-      }),
-    });
-
-    if (!res.ok) {
-      throw new Error("Erreur lors de la mise à jour de la tâche");
-    }
-
-    const apiTask: ApiTask = await res.json();
-    const updated = apiTaskToTask(apiTask);
-
-    setTasks((prev) => prev.map((task) => (task.id === id ? updated : task)));
+    await setStatus(id, nextStatus);
   }
 
   async function del(id: string) {
@@ -149,6 +134,23 @@ export function TasksProvider({ children }: { children: ReactNode }) {
     setTasks((prev) => prev.map((task) => (task.id === id ? updated : task)));
   }
 
+  async function setStatus(id: string, status: ApiTaskStatus) {
+    const res = await fetch(`/api/tasks/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status }),
+    });
+
+    if (!res.ok) {
+      throw new Error("Erreur lors de la mise à jour de la tâche");
+    }
+
+    const apiTask: ApiTask = await res.json();
+    const updated = apiTaskToTask(apiTask);
+
+    setTasks((prev) => prev.map((task) => (task.id === id ? updated : task)));
+  }
+
   const value: TasksContextValue = {
     tasks,
     loading,
@@ -158,6 +160,7 @@ export function TasksProvider({ children }: { children: ReactNode }) {
     toggle,
     del,
     editTitle,
+    setStatus,
   };
 
   return (

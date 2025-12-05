@@ -1,9 +1,14 @@
 import "./globals.css";
+import type { Metadata } from "next";
 import Link from "next/link";
+import { Providers } from "./providers";
+import { NavUser } from "@/components/NavUser";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import Image from "next/image";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "TaskForge",
-  description: "Task manager migrated to Next.js",
+  description: "Task manager migré vers Next.js",
 };
 
 export default function RootLayout({
@@ -13,24 +18,76 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr">
-      <body className="min-h-dvh bg-neutral-950 text-neutral-100 antialiased">
-        <header className="p-4 border-b border-neutral-800">
-          <nav className="flex gap-4 text-sm">
-            <Link href="/" className="hover:underline">
-              Accueil
-            </Link>
-            <Link href="/tasks" className="hover:underline">
-              Tasks
-            </Link>
-            <Link href="/server-time" className="hover:underline">
-              SSR
-            </Link>
-            <Link href="/SSG" className="hover:underline">
-              SSG
-            </Link>
-          </nav>
-        </header>
-        <main className="p-6">{children}</main>
+      {/* ⚠️ Pas de couleur de texte ici, c’est géré dans globals.css + data-theme */}
+      <body className="min-h-dvh antialiased">
+        <Providers>
+          {/* Wrapper flex pour footer collé en bas */}
+          <div className="flex min-h-dvh flex-col">
+            {/* NAVBAR */}
+            <header className="navbar">
+              <div className="navbar-inner">
+                {/* Groupe gauche : logo + liens */}
+                <div className="flex items-center gap-8">
+                  {/* Logo */}
+                  <Link href="/" className="flex items-center gap-3">
+                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10">
+                      <Image
+                        src="/logo-enclume.png"
+                        alt="TaskForge"
+                        width={24}
+                        height={24}
+                        className="h-8 w-8 object-contain"
+                        priority
+                      />
+                    </span>
+                    <span className="text-sm font-semibold tracking-[0.25em] uppercase text-slate-200">
+                      TASKFORGE
+                    </span>
+                  </Link>
+
+                  {/* Liens de navigation */}
+                  <nav className="nav-links">
+                    <Link href="/" className="nav-link">
+                      Accueil
+                    </Link>
+                    <Link href="/tasks" className="nav-link">
+                      Tasks
+                    </Link>
+                    <Link href="/SSR" className="nav-link">
+                      SSR
+                    </Link>
+                    <Link href="/SSG" className="nav-link">
+                      SSG
+                    </Link>
+                  </nav>
+                </div>
+
+                {/* Groupe droite : toggle thème + user */}
+                <div className="flex items-center gap-3">
+                  <ThemeToggle />
+                  <NavUser />
+                </div>
+              </div>
+            </header>
+
+            {/* Contenu des pages */}
+            <div className="flex-1">{children}</div>
+
+            {/* FOOTER */}
+            <footer className="mt-8 border-t border-white/10 bg-black/20">
+              <div className="app-shell flex flex-col items-center justify-between gap-3 py-4 text-[11px] text-slate-400 md:flex-row">
+                <span>© 2025 TaskForge — projet Next.js.</span>
+                <a
+                  href="https://github.com/Byakoren/TaskForge"
+                  target="_blank"
+                  className="hover:text-slate-200"
+                >
+                  GitHub du projet
+                </a>
+              </div>
+            </footer>
+          </div>
+        </Providers>
       </body>
     </html>
   );

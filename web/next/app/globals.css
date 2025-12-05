@@ -180,7 +180,6 @@
            transition;
   }
 
-
   .feature-list {
     @apply space-y-5;
   }
@@ -396,7 +395,6 @@
     @apply border-orange-200 bg-white/70 text-slate-800
            hover:bg-orange-100 hover:border-orange-400;
   }
-
 
   html[data-theme="light"] .meta-muted {
     @apply text-slate-800;

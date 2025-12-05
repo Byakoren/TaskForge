@@ -150,6 +150,20 @@ function TasksContent() {
 
   // === Filtres de colonnes ===
   const [filtersOpen, setFiltersOpen] = useState(false);
+
+  useEffect(() => {
+    if (!filtersOpen) return;
+
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        setFiltersOpen(false);
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [filtersOpen]);
+
   const [visibleColumns, setVisibleColumns] = useState<{
     todo: boolean;
     doing: boolean;
@@ -283,6 +297,9 @@ function TasksContent() {
               type="button"
               onClick={() => setFiltersOpen((o) => !o)}
               className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[11px] font-medium text-slate-200 hover:bg-white/10 transition"
+              aria-haspopup="true"
+              aria-expanded={filtersOpen}
+              aria-controls="tasks-filters-panel"
             >
               <span className="text-xs">☰</span>
               <span>Filtres</span>
@@ -290,7 +307,12 @@ function TasksContent() {
           </div>
 
           {filtersOpen && (
-            <div className="mt-3 rounded-xl border border-white/10 bg-black/80 p-3 text-xs shadow-xl md:absolute md:right-4 md:top-12 md:w-64 md:mt-0">
+            <div
+              id="tasks-filters-panel"
+              role="group"
+              aria-label="Filtres d’affichage des colonnes"
+              className="mt-3 rounded-xl border border-white/10 bg-black/80 p-3 text-xs shadow-xl md:absolute md:right-4 md:top-12 md:w-64 md:mt-0"
+            >
               <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-400">
                 Colonnes visibles
               </p>

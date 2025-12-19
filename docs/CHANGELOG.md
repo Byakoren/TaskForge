@@ -202,3 +202,16 @@ Format inspiré de **Keep a Changelog** et **SemVer**.
 - ⚠️ L’API `/api/tasks` reste accessible sans vérification de token (choix pédagogique pour l’instant).
 
 ---
+
+## [0.5.0] - 2025-12-19 — Docker (S9)
+
+### Added
+- Environnement de dev Docker Compose (services `api` + `next`)
+- Dockerfiles + `.dockerignore` pour le backend et Next.js
+- Variables d’environnement `.env.example`
+- Documentation Docker : `docs/infra/docker.md`
+
+### Notes
+- `docker compose down` supprime les conteneurs (jetables) mais conserve les volumes (sauf `-v`)
+
+---

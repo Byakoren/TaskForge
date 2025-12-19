@@ -183,18 +183,18 @@
 > 🎯 Objectif : conteneurisation du front et du back pour un environnement de dev isolé.
 
 ### Dev
-- [ ] `Dockerfile` backend + `.dockerignore`
-- [ ] `docker-compose.yml` (API + front)
-- [ ] Variables d’environnement (`.env`)
+- [x] `Dockerfile` backend + `.dockerignore`
+- [x] `docker-compose.yml` (API + front)
+- [x] Variables d’environnement (`.env`)
 
 ### Tests
-- [ ] Build & run local
-- [ ] Vérifier endpoints dans conteneurs
+- [x] Build & run local
+- [x] Vérifier endpoints dans conteneurs
 
 ### Docs
-- 📄 `docs/infra/docker.md` → créer
-- 📄 `README.md` → section Docker
-- 📄 `CHANGELOG.md` → `v0.6.0`
+- ✅ `docs/infra/docker.md` → créer
+- ✅ `README.md` → section Docker
+- ✅ `CHANGELOG.md` → `v0.6.0`
 
 ---
 

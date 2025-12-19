@@ -38,10 +38,10 @@ TaskForge permet à un utilisateur de **capturer, organiser et suivre** ses tâc
 - [x] Ajouter / éditer / supprimer une tâche
 - [x] Marquer une tâche comme terminée
 - [ ] Filtrer par statut (+ recherche par texte)
-- [ ] Réordonner les tâches (drag & drop)
+- [x] Réordonner les tâches (drag & drop)
 - [x] Persistance locale (LocalStorage) puis via API (en mémoire pour l’instant)
 - [ ] Interface accessible & responsive (version finale)
-- [ ] Thème clair/sombre
+- [x] Thème clair/sombre
 
 ### 🔐 Auth actuelle (S6–S7)
 
@@ -156,6 +156,41 @@ Si besoin de montrer la toute première version en JS/TS pur :
 # À la racine du projet (là où se trouve package.json du MVP)
 npm install
 npm run dev      # sert /public/ via http-server (port 8080 en général)
+```
+
+---
+
+## 🐳 Docker (dev)
+
+TaskForge peut être lancé en **développement** via **Docker Compose** (API + Next.js), avec hot reload.
+
+### Prérequis (Windows)
+- Docker Desktop
+- WSL2 + Docker Desktop → *Settings* → *Resources* → *WSL Integration* (Ubuntu activé)
+
+### Démarrage rapide
+Depuis la racine du repo :
+
+```bash
+cp .env.example .env
+docker compose up --build
+```
+
+- Front (Next) : http://localhost:3000
+- API : http://localhost:3001
+
+### Commandes utiles
+```bash
+docker compose ps
+docker compose logs -f --tail=200
+docker compose restart api
+docker compose restart next
+docker compose down
+```
+
+### Vérifier la communication entre conteneurs
+```bash
+docker compose exec next sh -lc "wget -qO- http://api:3001/api/tasks"
 ```
 
 ---

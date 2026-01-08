@@ -9,13 +9,24 @@ import {
 } from "react";
 import type { Task } from "@/types/task";
 
-type ApiTaskStatus = "todo" | "doing" | "done";
+type UiTaskStatus = "todo" | "doing" | "done";
+type DbTaskStatus = "TODO" | "DOING" | "DONE";
 
 type ApiTask = {
   id: string;
   title: string;
-  status: ApiTaskStatus;
+  status: DbTaskStatus;
+  createdAt?: string;
+  updatedAt?: string;
 };
+
+function toUiStatus(status: DbTaskStatus): UiTaskStatus {
+  return status.toLowerCase() as UiTaskStatus;
+}
+
+function toDbStatus(status: UiTaskStatus): DbTaskStatus {
+  return status.toUpperCase() as DbTaskStatus;
+}
 
 type TasksContextValue = {
   tasks: Task[];
@@ -26,17 +37,18 @@ type TasksContextValue = {
   toggle: (id: string) => Promise<void>;
   del: (id: string) => Promise<void>;
   editTitle: (id: string, newTitle: string) => Promise<void>;
-  setStatus: (id: string, status: ApiTaskStatus) => Promise<void>;
+  setStatus: (id: string, status: UiTaskStatus) => Promise<void>;
 };
 
 const TasksContext = createContext<TasksContextValue | undefined>(undefined);
 
 function apiTaskToTask(apiTask: ApiTask): Task {
+  const status = toUiStatus(apiTask.status);
   return {
     id: apiTask.id,
     title: apiTask.title,
-    status: apiTask.status,
-    done: apiTask.status === "done",
+    status,
+    done: status === "done",
   };
 }
 
@@ -90,7 +102,7 @@ export function TasksProvider({ children }: { children: ReactNode }) {
     const current = tasks.find((task) => task.id === id);
     if (!current) return;
 
-    const nextStatus: ApiTaskStatus =
+    const nextStatus: UiTaskStatus =
       current.status === "done" ? "todo" : "done";
 
     await setStatus(id, nextStatus);
@@ -134,11 +146,11 @@ export function TasksProvider({ children }: { children: ReactNode }) {
     setTasks((prev) => prev.map((task) => (task.id === id ? updated : task)));
   }
 
-  async function setStatus(id: string, status: ApiTaskStatus) {
+  async function setStatus(id: string, status: UiTaskStatus) {
     const res = await fetch(`/api/tasks/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status }),
+      body: JSON.stringify({ status: toDbStatus(status) }),
     });
 
     if (!res.ok) {

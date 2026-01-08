@@ -215,3 +215,24 @@ Format inspiré de **Keep a Changelog** et **SemVer**.
 - `docker compose down` supprime les conteneurs (jetables) mais conserve les volumes (sauf `-v`)
 
 ---
+
+## [0.6.0] - 2026-01-08 — PostgreSQL + Prisma (S10)
+
+### Added
+- Service PostgreSQL (`db`) dans `docker-compose.yml` (Postgres 16) + persistance via volume
+- Prisma dans `web/next` (schema + génération du client)
+- Migrations Prisma (`init`) + création de la table `"Task"`
+
+### Changed
+- API Routes Next (`/api/tasks`, `/api/tasks/[id]`) branchées sur PostgreSQL via Prisma (CRUD)
+- Mapping des statuts côté front (`todo/doing/done`) ↔ DB (`TODO/DOING/DONE`) dans `TasksContext`
+
+### Fixed
+- Erreur Next App Router : `params` est une Promise → lecture via `await params` dans `/api/tasks/[id]`
+- Erreurs Prisma Client liées à la configuration/adapter (génération + connexion Postgres)
+
+### Notes
+- La base est accessible via `docker compose exec -it db psql -U taskforge -d taskforge`
+- Les endpoints Next sont testables via `curl http://localhost:3000/api/tasks`
+
+---

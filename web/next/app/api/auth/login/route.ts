@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { verifyCredentials } from "@/lib/auth";
 
+export const runtime = "nodejs";
+
 export async function POST(request: Request) {
   const body = await request.json().catch(() => ({}));
   const email = String(body.email ?? "").trim();

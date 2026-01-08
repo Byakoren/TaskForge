@@ -1,13 +1,17 @@
 import { NextResponse } from "next/server";
-import { listTasks, createTask } from "./data";
+import { prisma } from "@/lib/prisma";
+
+export const runtime = "nodejs";
 
 export async function GET() {
-  const tasks = listTasks();
+  const tasks = await prisma.task.findMany({
+    orderBy: { createdAt: "desc" },
+  });
   return NextResponse.json(tasks);
 }
 
 export async function POST(request: Request) {
-  const body = await request.json();
+  const body = await request.json().catch(() => ({}));
 
   const rawTitle = body?.title ?? "";
   const title = String(rawTitle).trim();
@@ -19,6 +23,9 @@ export async function POST(request: Request) {
     );
   }
 
-  const newTask = createTask(title);
+  const newTask = await prisma.task.create({
+    data: { title },
+  });
+
   return NextResponse.json(newTask, { status: 201 });
 }

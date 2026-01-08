@@ -202,19 +202,19 @@
 > 🎯 Objectif : mise en place d’une base de données persistante via Docker Compose.
 
 ### Dev
-- [ ] Intégrer PostgreSQL (Prisma ou Sequelize)
-- [ ] Configurer `docker-compose.yml` (API + DB + volumes)
-- [ ] Table `tasks` + migrations
-- [ ] Adapter routes API
+- [x] Intégrer PostgreSQL (Prisma)
+- [x] Configurer `docker-compose.yml` (Next + DB + volumes)
+- [x] Table `Task` + migrations (Prisma `init`)
+- [x] Adapter routes API Next (`/api/tasks`, `/api/tasks/[id]`) sur Prisma
 
 ### Tests
-- [ ] Tests d’intégration API ↔ DB
-- [ ] Vérifier migrations / rollback
+- [x] Tests manuels API ↔ DB (curl + vérification SQL)
+- [x] Vérifier migrations (apply ok, table `_prisma_migrations` présente)
 
 ### Docs
-- 📄 `docs/architecture/ARCHITECTURE_S10.md`
-- 📄 `docs/infra/docker.md` → update
-- 📄 `CHANGELOG.md` → `v0.7.0`
+- ✅ `docs/architecture/ARCHITECTURE_S10.md`
+- ✅ `docs/infra/docker.md` → update
+- ✅ `CHANGELOG.md` → `v0.7.0`
 
 ---
 
